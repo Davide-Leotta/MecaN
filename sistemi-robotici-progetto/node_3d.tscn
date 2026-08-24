@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bso36rahv52vv"]
 
 [ext_resource type="Script" uid="uid://w81la5fwqx4w" path="res://robot.gd" id="1_a202f"]
+[ext_resource type="Script" uid="uid://dxmgjj7wyfre2" path="res://main.gd" id="1_r3fl7"]
 [ext_resource type="ArrayMesh" uid="uid://bt5fu1w1oiwrh" path="res://Mecanum Wheel Left.obj" id="2_a0tk4"]
 [ext_resource type="ArrayMesh" uid="uid://cm3pctldnl3m6" path="res://Mecanum Wheel Right.obj" id="3_r3fl7"]
 
@@ -58,6 +59,7 @@ material = SubResource("StandardMaterial3D_xghog")
 font_size = 30
 
 [node name="Main" type="Node3D" unique_id=824318672]
+script = ExtResource("1_r3fl7")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=926319412]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
