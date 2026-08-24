@@ -1,0 +1,124 @@
+extends RigidBody3D
+
+@onready var mecanum_wheel_front_left: MeshInstance3D = $MecanumWheelFrontLeft
+@onready var mecanum_wheel_front_right: MeshInstance3D = $MecanumWheelFrontRight
+@onready var mecanum_wheel_rear_right: MeshInstance3D = $MecanumWheelRearRight
+@onready var mecanum_wheel_rear_left: MeshInstance3D = $MecanumWheelRearLeft
+
+@onready var real_time_pos: Label = $"../RealTimePos"
+
+var front_left_direction = Vector3(1, 0, -1)
+var front_right_direction = Vector3(1, 0, 1)
+var rear_right_direction = Vector3(-1, 0, 1)
+var rear_left_direction = Vector3(-1, 0, -1)
+
+var motor_power = 4
+
+# --- Variabili per il Debug 3D ---
+var debug_mesh: ImmediateMesh
+var debug_mesh_instance: MeshInstance3D
+
+func _ready():
+	# Inizializzazione della mesh per disegnare le linee di debug
+	debug_mesh = ImmediateMesh.new()
+	debug_mesh_instance = MeshInstance3D.new()
+	debug_mesh_instance.mesh = debug_mesh
+	
+	var mat = StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.vertex_color_use_as_albedo = true
+	debug_mesh_instance.material_override = mat
+	
+	# Impostiamo top_level a true così la mesh non ruota insieme all'auto
+	# ma rimane ancorata al sistema di coordinate globali
+	debug_mesh_instance.top_level = true
+	add_child(debug_mesh_instance)
+
+func _process(delta: float) -> void:
+	if real_time_pos:
+		var string = "%.3f" % position.x + " " + "%.3f" % position.z
+		real_time_pos.text = string
+
+func _physics_process(delta):
+	# Pulisce le linee del frame precedente per non accumularle
+	debug_mesh.clear_surfaces()
+	
+	var fl = 0.0
+	var fr = 0.0
+	var rr = 0.0
+	var rl = 0.0
+	
+	# 2. Invece di chiamare la funzione, sommiamo i valori
+	if Input.is_action_pressed("ui_accept"):
+		fl += 0.5; fr += 0.5; rr += 0.5; rl += 0.5
+
+	if Input.is_action_pressed("ui_up"):
+		fl += 1.0; fr -= 1.0; rr -= 1.0; rl += 1.0
+		
+	if Input.is_action_pressed("ui_down"):
+		fl -= 1.0; fr += 1.0; rr += 1.0; rl -= 1.0
+		
+	if Input.is_action_pressed("ui_right"):
+		fl += 1.0; fr += 1.0; rr -= 1.0; rl -= 1.0
+		
+	if Input.is_action_pressed("ui_left"):
+		fl -= 1.0; fr -= 1.0; rr += 1.0; rl += 1.0
+
+	fl = clamp(fl, -1.0, 1.0)
+	fr = clamp(fr, -1.0, 1.0)
+	rr = clamp(rr, -1.0, 1.0)
+	rl = clamp(rl, -1.0, 1.0)
+
+	# 4. Chiamiamo la funzione una sola volta per frame, ma solo se c'è movimento
+	if fl != 0 or fr != 0 or rr != 0 or rl != 0:
+		applica_forze_motori(fl, fr, rr, rl)
+
+
+# Funzione a parte per calcolare vettori globali e applicare le forze
+func applica_forze_motori(fl: float, fr: float, rr: float, rl: float):
+	
+	# 1. Calcoliamo la posizione (offset) locale orientata secondo la rotazione dell'auto
+	var pos_fl = global_transform.basis * Vector3(-0.5, 0, -0.5)
+	var pos_fr = global_transform.basis * Vector3(0.5, 0, -0.5)
+	var pos_rr = global_transform.basis * Vector3(0.5, 0, 0.5)
+	var pos_rl = global_transform.basis * Vector3(-0.5, 0, 0.5)
+	
+	# 2. Calcoliamo la forza globale, applicando potenza e moltiplicatore di direzione
+	var force_fl = global_transform.basis * (front_left_direction * motor_power * fl)
+	var force_fr = global_transform.basis * (front_right_direction * motor_power * fr)
+	var force_rr = global_transform.basis * (rear_right_direction * motor_power * rr)
+	var force_rl = global_transform.basis * (rear_left_direction * motor_power * rl)
+	
+	# 3. DISEGNO DEBUG DELLE FORZE
+	# Troviamo la posizione assoluta di partenza nel mondo (Centro della macchina + offset della ruota)
+	var start_fl = global_position + pos_fl
+	var start_fr = global_position + pos_fr
+	var start_rr = global_position + pos_rr
+	var start_rl = global_position + pos_rl
+	
+	# Disegniamo le linee dalla posizione di partenza verso la direzione della forza
+	disegna_linea_3d(start_fl, start_fl + (force_fl * 0.1), Color.RED)
+	disegna_linea_3d(start_fr, start_fr + (force_fr * 0.1), Color.GREEN)
+	disegna_linea_3d(start_rr, start_rr + (force_rr * 0.1), Color.BLUE)
+	disegna_linea_3d(start_rl, start_rl + (force_rl * 0.1), Color.YELLOW)
+	
+	# 4. Ora applichiamo le forze fisiche
+	apply_force(force_fl, pos_fl)
+	apply_force(force_fr, pos_fr)
+	apply_force(force_rr, pos_rr)
+	apply_force(force_rl, pos_rl)
+	
+	# 5. Animazione ruote
+	mecanum_wheel_front_left.rotate_x(fl * -0.1)
+	mecanum_wheel_front_right.rotate_x(fr * 0.1)
+	mecanum_wheel_rear_right.rotate_x(rr * 0.1)
+	mecanum_wheel_rear_left.rotate_x(rl * -0.1)
+
+# Funzione per disegnare linee nello spazio 3D tramite ImmediateMesh
+func disegna_linea_3d(inizio: Vector3, fine: Vector3, colore: Color):
+	debug_mesh.surface_begin(Mesh.PRIMITIVE_LINES)
+	debug_mesh.surface_set_color(colore)
+	debug_mesh.surface_add_vertex(inizio)
+	debug_mesh.surface_set_color(colore)
+	debug_mesh.surface_add_vertex(fine)
+	debug_mesh.surface_end()

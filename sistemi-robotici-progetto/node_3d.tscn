@@ -1,0 +1,186 @@
+[gd_scene format=3 uid="uid://bso36rahv52vv"]
+
+[ext_resource type="Script" uid="uid://w81la5fwqx4w" path="res://robot.gd" id="1_a202f"]
+[ext_resource type="ArrayMesh" uid="uid://bt5fu1w1oiwrh" path="res://Mecanum Wheel Left.obj" id="2_a0tk4"]
+[ext_resource type="ArrayMesh" uid="uid://cm3pctldnl3m6" path="res://Mecanum Wheel Right.obj" id="3_r3fl7"]
+
+[sub_resource type="Sky" id="Sky_o44yj"]
+
+[sub_resource type="Environment" id="Environment_yjvqu"]
+background_mode = 2
+sky = SubResource("Sky_o44yj")
+ambient_light_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jsk3o"]
+albedo_color = Color(0, 0.5019608, 0, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2ls52"]
+material = SubResource("StandardMaterial3D_jsk3o")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4xowi"]
+size = Vector3(2, 0.001, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a202f"]
+albedo_color = Color(0, 0, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yjvqu"]
+material = SubResource("StandardMaterial3D_a202f")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a0tk4"]
+
+[sub_resource type="Environment" id="Environment_4xowi"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_a0tk4"]
+height = 33.61251
+radius = 30.656897
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_r3fl7"]
+height = 33.61251
+radius = 30.656897
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_jka67"]
+height = 33.61251
+radius = 30.656897
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_i5arm"]
+height = 33.61251
+radius = 30.656897
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xghog"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2ls52"]
+material = SubResource("StandardMaterial3D_xghog")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_noarx"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_a0tk4"]
+font_size = 30
+
+[node name="Main" type="Node3D" unique_id=824318672]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=926319412]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+omni_range = 10.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=314322238]
+environment = SubResource("Environment_yjvqu")
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=220768897]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=95465601]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+mesh = SubResource("PlaneMesh_2ls52")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1033602667]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+shape = SubResource("BoxShape3D_4xowi")
+
+[node name="Robot" type="RigidBody3D" parent="." unique_id=1177948201]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+script = ExtResource("1_a202f")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Robot" unique_id=1906942489]
+transform = Transform3D(0.8, 0, 0, 0, 0.25, 0, 0, 0, 1.2, 0, 0, 0)
+mesh = SubResource("BoxMesh_yjvqu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Robot" unique_id=1471850091]
+transform = Transform3D(0.8, 0, 0, 0, 0.25, 0, 0, 0, 1.2, 0, 0, 0)
+shape = SubResource("BoxShape3D_a0tk4")
+
+[node name="Camera3D" type="Camera3D" parent="Robot" unique_id=759205789]
+transform = Transform3D(1, 0, 0, 0, 1.971528, 1.0436615, 0, -3.414787, 0.60255814, 0, 3, 1.5)
+environment = SubResource("Environment_4xowi")
+
+[node name="MecanumWheelFrontLeft" type="MeshInstance3D" parent="Robot" unique_id=1309192802]
+transform = Transform3D(-0.005, 0, -7.5497897e-10, 0, 0.005, 0, 7.5497897e-10, 0, -0.005, -0.5, 0, -0.5)
+mesh = ExtResource("2_a0tk4")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Robot" unique_id=1309131423]
+transform = Transform3D(2.1855694e-10, 0.005, -7.5497897e-10, 0.005, -2.1855694e-10, 0, -3.3001178e-17, -7.5497897e-10, -0.005, -0.49239555, -0.0006989574, -0.49907002)
+shape = SubResource("CylinderShape3D_a0tk4")
+
+[node name="MecanumWheelFrontRight" type="MeshInstance3D" parent="Robot" unique_id=1169857195]
+transform = Transform3D(-0.005, 0, -7.5497897e-10, 0, 0.005, 0, 7.5497897e-10, 0, -0.005, 0.5, 0, -0.5)
+mesh = ExtResource("3_r3fl7")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Robot" unique_id=1427974481]
+transform = Transform3D(2.1855694e-10, 0.005, -7.5497897e-10, 0.005, -2.1855694e-10, 0, -3.3001178e-17, -7.5497897e-10, -0.005, 0.49239558, -0.0006989574, -0.49907002)
+shape = SubResource("CylinderShape3D_r3fl7")
+
+[node name="MecanumWheelRearRight" type="MeshInstance3D" parent="Robot" unique_id=800607626]
+transform = Transform3D(0.005, 0, 0, 0, 0.005, 0, 0, 0, 0.005, 0.5, 0, 0.5)
+mesh = ExtResource("2_a0tk4")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Robot" unique_id=1812900410]
+transform = Transform3D(-2.1855694e-10, -0.005, 0, 0.005, -2.1855694e-10, 0, 0, 0, 0.005, 0.49239555, -0.0006989574, 0.49907002)
+shape = SubResource("CylinderShape3D_jka67")
+
+[node name="MecanumWheelRearLeft" type="MeshInstance3D" parent="Robot" unique_id=757899731]
+transform = Transform3D(0.005, 0, 0, 0, 0.005, 0, 0, 0, 0.005, -0.5, 0, 0.5)
+mesh = ExtResource("3_r3fl7")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="Robot" unique_id=110225679]
+transform = Transform3D(-2.1855694e-10, -0.005, 0, 0.005, -2.1855694e-10, 0, 0, 0, 0.005, -0.49239558, -0.0006989574, 0.49907005)
+shape = SubResource("CylinderShape3D_i5arm")
+
+[node name="Wall1" type="StaticBody3D" parent="." unique_id=139047346]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wall1" unique_id=1426635489]
+transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 20, -10, 1.5, 0)
+mesh = SubResource("BoxMesh_2ls52")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall1" unique_id=1284432203]
+transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 20, -10, 1.5, 0)
+shape = SubResource("BoxShape3D_noarx")
+
+[node name="Wall2" type="StaticBody3D" parent="." unique_id=868287378]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wall2" unique_id=1299810355]
+transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 20, -10, 1.5, 0)
+mesh = SubResource("BoxMesh_2ls52")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall2" unique_id=188256445]
+transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 20, -10, 1.5, 0)
+shape = SubResource("BoxShape3D_noarx")
+
+[node name="Wall3" type="StaticBody3D" parent="." unique_id=1150915538]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wall3" unique_id=1874956567]
+transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 20, -10, 1.5, 0)
+mesh = SubResource("BoxMesh_2ls52")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall3" unique_id=1733893449]
+transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 20, -10, 1.5, 0)
+shape = SubResource("BoxShape3D_noarx")
+
+[node name="Wall4" type="StaticBody3D" parent="." unique_id=2138843969]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wall4" unique_id=1602130229]
+transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 20, -10, 1.5, 0)
+mesh = SubResource("BoxMesh_2ls52")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall4" unique_id=1544476495]
+transform = Transform3D(1, 0, 0, 0, 3, 0, 0, 0, 20, -10, 1.5, 0)
+shape = SubResource("BoxShape3D_noarx")
+
+[node name="Label" type="Label" parent="." unique_id=185234962]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Mecanum robot test"
+label_settings = SubResource("LabelSettings_a0tk4")
+
+[node name="Label2" type="Label" parent="." unique_id=106751308]
+offset_top = 40.0
+offset_right = 1.0
+offset_bottom = 63.0
+text = "PosX, PosY: "
+
+[node name="RealTimePos" type="Label" parent="." unique_id=1351947485]
+offset_left = 92.0
+offset_top = 40.0
+offset_right = 132.0
+offset_bottom = 63.0
