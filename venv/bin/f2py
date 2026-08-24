@@ -1,4 +1,4 @@
-#!/home/ismaele/robots/pythbots/bin/python
+#!/home/ismaele/my_projects/MecaN/venv/bin/python
 import sys
 from numpy.f2py.f2py2e import main
 if __name__ == '__main__':

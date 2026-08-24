@@ -1,4 +1,4 @@
-#!/home/ismaele/robots/pythbots/bin/python
+#!/home/ismaele/my_projects/MecaN/venv/bin/python
 import sys
 from numpy._configtool import main
 if __name__ == '__main__':
