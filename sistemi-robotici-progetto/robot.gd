@@ -81,7 +81,7 @@ func _physics_process(delta):
 	var w4 = dds.read("w4")
 	
 	if w1 != null && w2 != null && w3 != null && w4 != null:
-		applica_forze_motori(w1,w2,w3,w4)
+		applica_forze_motori(w1 / 4,w2 / 4,w3 / 4,w4 / 4)
 
 func applica_forze_motori(fl: float, fr: float, rr: float, rl: float):
 	
