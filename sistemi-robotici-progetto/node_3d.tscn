@@ -71,11 +71,11 @@ environment = SubResource("Environment_yjvqu")
 [node name="Floor" type="StaticBody3D" parent="." unique_id=220768897]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=95465601]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
 mesh = SubResource("PlaneMesh_2ls52")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1033602667]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
 shape = SubResource("BoxShape3D_4xowi")
 
 [node name="Robot" type="RigidBody3D" parent="." unique_id=1177948201]
@@ -127,6 +127,7 @@ transform = Transform3D(-2.1855694e-10, -0.005, 0, 0.005, -2.1855694e-10, 0, 0, 
 shape = SubResource("CylinderShape3D_i5arm")
 
 [node name="Wall1" type="StaticBody3D" parent="." unique_id=139047346]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Wall1" unique_id=1426635489]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 20, -10, 0.5, 0)
@@ -137,7 +138,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 20, -10, 0.5, 0)
 shape = SubResource("BoxShape3D_noarx")
 
 [node name="Wall2" type="StaticBody3D" parent="." unique_id=868287378]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+transform = Transform3D(-4.371139e-07, 0, 10, 0, 10, 0, -10, 0, -4.371139e-07, 0, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Wall2" unique_id=1299810355]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 20, -10, 0.5, 0)
@@ -148,7 +149,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 20, -10, 0.5, 0)
 shape = SubResource("BoxShape3D_noarx")
 
 [node name="Wall3" type="StaticBody3D" parent="." unique_id=1150915538]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+transform = Transform3D(-10, 0, -1.509958e-06, 0, 10, 0, 1.509958e-06, 0, -10, 0, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Wall3" unique_id=1874956567]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 20, -10, 0.5, 0)
@@ -159,7 +160,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 20, -10, 0.5, 0)
 shape = SubResource("BoxShape3D_noarx")
 
 [node name="Wall4" type="StaticBody3D" parent="." unique_id=2138843969]
-transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 0, 0, 0)
+transform = Transform3D(-4.371139e-07, 0, -10, 0, 10, 0, 10, 0, -4.371139e-07, 0, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Wall4" unique_id=1602130229]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 20, -10, 0.5, 0)
