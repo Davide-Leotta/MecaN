@@ -33,6 +33,11 @@ func _ready():
 	# ma rimane ancorata al sistema di coordinate globali
 	debug_mesh_instance.top_level = true
 	add_child(debug_mesh_instance)
+	
+	dds.subscribe("w1")
+	dds.subscribe("w2")
+	dds.subscribe("w3")
+	dds.subscribe("w4")
 
 func _process(delta: float) -> void:
 	if real_time_pos:
@@ -69,6 +74,14 @@ func _physics_process(delta):
 
 	if fl != 0 or fr != 0 or rr != 0 or rl != 0:
 		applica_forze_motori(fl, fr, rr, rl)
+		
+	var w1 = dds.read("w1")
+	var w2 = dds.read("w2")
+	var w3 = dds.read("w3")
+	var w4 = dds.read("w4")
+	
+	if w1 != null && w2 != null && w3 != null && w4 != null:
+		applica_forze_motori(w1,w2,w3,w4)
 
 func applica_forze_motori(fl: float, fr: float, rr: float, rl: float):
 	
