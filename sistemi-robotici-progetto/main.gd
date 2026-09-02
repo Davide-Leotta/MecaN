@@ -12,9 +12,12 @@ func _process(delta: float) -> void:
 	var posZ: float = robot.position.z
 	var velX: float = robot.linear_velocity.x
 	var velZ: float = robot.linear_velocity.z
+	var ang: float = robot.angular_velocity.y
 	dds.publish("posX", dds.DDS_TYPE_FLOAT, posX)
 	dds.publish("posZ", dds.DDS_TYPE_FLOAT, posZ)
 	dds.publish("velX", dds.DDS_TYPE_FLOAT, velX)
 	dds.publish("velZ", dds.DDS_TYPE_FLOAT, velZ)
+	dds.publish("ang", dds.DDS_TYPE_FLOAT, ang)
+	
 		
 	pass
