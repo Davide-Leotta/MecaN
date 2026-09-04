@@ -12,8 +12,6 @@ var front_right_direction = Vector3(1, 0, 1)
 var rear_right_direction = Vector3(-1, 0, 1)
 var rear_left_direction = Vector3(-1, 0, -1)
 
-var motor_power = 4
-
 # --- Variabili per il Debug 3D ---
 var debug_mesh: ImmediateMesh
 var debug_mesh_instance: MeshInstance3D
@@ -92,10 +90,10 @@ func applica_forze_motori(fl: float, fr: float, rr: float, rl: float):
 	var pos_rl = global_transform.basis * Vector3(-0.5, 0, 0.5)
 	
 	# Calcoliamo la forza globale, applicando potenza e moltiplicatore di direzione
-	var force_fl = global_transform.basis * (front_left_direction * motor_power * fl)
-	var force_fr = global_transform.basis * (front_right_direction * motor_power * fr)
-	var force_rr = global_transform.basis * (rear_right_direction * motor_power * rr)
-	var force_rl = global_transform.basis * (rear_left_direction * motor_power * rl)
+	var force_fl = global_transform.basis * (front_left_direction * fl)
+	var force_fr = global_transform.basis * (front_right_direction * fr)
+	var force_rr = global_transform.basis * (rear_right_direction * rr)
+	var force_rl = global_transform.basis * (rear_left_direction * rl)
 	
 	# DISEGNO DEBUG DELLE FORZE
 	# Troviamo la posizione assoluta di partenza nel mondo (Centro della macchina + offset della ruota)

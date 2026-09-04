@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://w81la5fwqx4w" path="res://robot.gd" id="1_a202f"]
 [ext_resource type="Script" uid="uid://dxmgjj7wyfre2" path="res://main.gd" id="1_r3fl7"]
 [ext_resource type="ArrayMesh" uid="uid://bt5fu1w1oiwrh" path="res://Mecanum Wheel Left.obj" id="2_a0tk4"]
+[ext_resource type="Shader" uid="uid://bf8g12krfifa6" path="res://checkerboard.gdshader" id="2_jka67"]
 [ext_resource type="ArrayMesh" uid="uid://cm3pctldnl3m6" path="res://Mecanum Wheel Right.obj" id="3_r3fl7"]
 
 [sub_resource type="Sky" id="Sky_o44yj"]
@@ -12,11 +13,15 @@ background_mode = 2
 sky = SubResource("Sky_o44yj")
 ambient_light_color = Color(1, 1, 1, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jsk3o"]
-albedo_color = Color(0, 0.5019608, 0, 1)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r3fl7"]
+render_priority = 0
+shader = ExtResource("2_jka67")
+shader_parameter/scale = 100.0
+shader_parameter/color1 = Color(0.8, 0.8, 0.8, 1)
+shader_parameter/color2 = Color(0.2, 0.2, 0.2, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_2ls52"]
-material = SubResource("StandardMaterial3D_jsk3o")
+material = SubResource("ShaderMaterial_r3fl7")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4xowi"]
 size = Vector3(2, 0.001, 2)
@@ -71,7 +76,7 @@ environment = SubResource("Environment_yjvqu")
 [node name="Floor" type="StaticBody3D" parent="." unique_id=220768897]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=95465601]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -0.0025060177, 0.009711266, -0.0074243546)
 mesh = SubResource("PlaneMesh_2ls52")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1033602667]
