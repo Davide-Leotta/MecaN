@@ -13,7 +13,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	var posX: float = robot.position.x
 	var posZ: float = robot.position.z
-	var ang: float = robot.rotation.y
+	var ang: float = rad_to_deg(robot.rotation.y)
 	var velX: float = robot.linear_velocity.x
 	var velZ: float = robot.linear_velocity.z
 	var velAng: float = robot.angular_velocity.y
