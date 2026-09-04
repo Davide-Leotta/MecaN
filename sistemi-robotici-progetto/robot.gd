@@ -6,6 +6,7 @@ extends RigidBody3D
 @onready var mecanum_wheel_rear_left: MeshInstance3D = $MecanumWheelRearLeft
 
 @onready var real_time_pos: Label = $"../RealTimePos"
+@onready var real_time_vel: Label = $"../RealTimeVel"
 
 var front_left_direction = Vector3(1, 0, -1)
 var front_right_direction = Vector3(1, 0, 1)
@@ -39,8 +40,10 @@ func _ready():
 
 func _process(delta: float) -> void:
 	if real_time_pos:
-		var string = "%.3f" % position.x + " " + "%.3f" % position.z
-		real_time_pos.text = string
+		var pos = "%.3f" % position.x + " " + "%.3f" % position.z
+		var vel = "%.3f" % linear_velocity.x + " " + "%.3f" % linear_velocity.z
+		real_time_pos.text = pos
+		real_time_vel.text = vel
 
 func _physics_process(delta):
 	debug_mesh.clear_surfaces()
@@ -54,21 +57,21 @@ func _physics_process(delta):
 		fl += 0.5; fr += 0.5; rr += 0.5; rl += 0.5
 
 	if Input.is_action_pressed("ui_up"):
-		fl += 1.0; fr -= 1.0; rr -= 1.0; rl += 1.0
+		fl += 5.0; fr -= 5.0; rr -= 5.0; rl += 5.0
 		
 	if Input.is_action_pressed("ui_down"):
-		fl -= 1.0; fr += 1.0; rr += 1.0; rl -= 1.0
+		fl -= 5.0; fr += 5.0; rr += 5.0; rl -= 5.0
 		
 	if Input.is_action_pressed("ui_right"):
-		fl += 1.0; fr += 1.0; rr -= 1.0; rl -= 1.0
+		fl += 5.0; fr += 5.0; rr -= 5.0; rl -= 5.0
 		
 	if Input.is_action_pressed("ui_left"):
-		fl -= 1.0; fr -= 1.0; rr += 1.0; rl += 1.0
+		fl -= 5.0; fr -= 5.0; rr += 5.0; rl += 5.0
 
-	fl = clamp(fl, -1.0, 1.0)
-	fr = clamp(fr, -1.0, 1.0)
-	rr = clamp(rr, -1.0, 1.0)
-	rl = clamp(rl, -1.0, 1.0)
+	#fl = clamp(fl, -1.0, 1.0)
+	#fr = clamp(fr, -1.0, 1.0)
+	#rr = clamp(rr, -1.0, 1.0)
+	#rl = clamp(rl, -1.0, 1.0)
 
 	if fl != 0 or fr != 0 or rr != 0 or rl != 0:
 		applica_forze_motori(fl, fr, rr, rl)
@@ -115,10 +118,10 @@ func applica_forze_motori(fl: float, fr: float, rr: float, rl: float):
 	apply_force(force_rl, pos_rl)
 	
 	# Animazione ruote
-	mecanum_wheel_front_left.rotate_x(fl * -0.1)
-	mecanum_wheel_front_right.rotate_x(fr * 0.1)
-	mecanum_wheel_rear_right.rotate_x(rr * 0.1)
-	mecanum_wheel_rear_left.rotate_x(rl * -0.1)
+	mecanum_wheel_front_left.rotate_x(fl * -0.025)
+	mecanum_wheel_front_right.rotate_x(fr * 0.025)
+	mecanum_wheel_rear_right.rotate_x(rr * 0.025)
+	mecanum_wheel_rear_left.rotate_x(rl * -0.025)
 
 # Funzione per disegnare linee nello spazio 3D
 func draw_line(inizio: Vector3, fine: Vector3, colore: Color):
