@@ -141,6 +141,9 @@ mesh = ExtResource("3_r3fl7")
 transform = Transform3D(-2.1855694e-10, -0.005, 0, 0.005, -2.1855694e-10, 0, 0, 0, 0.005, -0.49239558, -0.0006989574, 0.49907005)
 shape = SubResource("CylinderShape3D_i5arm")
 
+[node name="RayCast3D" type="RayCast3D" parent="Robot" unique_id=1052444387]
+transform = Transform3D(10, 0, 0, 0, -4.371139e-07, -10, 0, 10, -4.371139e-07, 0, 0, 0)
+
 [node name="Wall1" type="StaticBody3D" parent="." unique_id=139047346]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 
