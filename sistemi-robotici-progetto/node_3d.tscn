@@ -5,6 +5,7 @@
 [ext_resource type="ArrayMesh" uid="uid://bt5fu1w1oiwrh" path="res://Mecanum Wheel Left.obj" id="2_a0tk4"]
 [ext_resource type="Shader" uid="uid://bf8g12krfifa6" path="res://checkerboard.gdshader" id="2_jka67"]
 [ext_resource type="ArrayMesh" uid="uid://cm3pctldnl3m6" path="res://Mecanum Wheel Right.obj" id="3_r3fl7"]
+[ext_resource type="Script" uid="uid://cjme2a6mk08rb" path="res://ray_cast_3d.gd" id="6_i5arm"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jka67"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -63,6 +64,14 @@ albedo_color = Color(1, 0, 0, 1)
 material = SubResource("StandardMaterial3D_xghog")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_noarx"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wc5p8"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xghog"]
+material = SubResource("StandardMaterial3D_wc5p8")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_i5arm"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_a0tk4"]
 font_size = 30
@@ -142,7 +151,8 @@ transform = Transform3D(-2.1855694e-10, -0.005, 0, 0.005, -2.1855694e-10, 0, 0, 
 shape = SubResource("CylinderShape3D_i5arm")
 
 [node name="RayCast3D" type="RayCast3D" parent="Robot" unique_id=1052444387]
-transform = Transform3D(10, 0, 0, 0, -4.371139e-07, -10, 0, 10, -4.371139e-07, 0, 0, 0)
+transform = Transform3D(20, 0, 0, 0, -8.742278e-07, -20, 0, 20, -8.742278e-07, 0, 0, 0)
+script = ExtResource("6_i5arm")
 
 [node name="Wall1" type="StaticBody3D" parent="." unique_id=139047346]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
@@ -187,6 +197,33 @@ mesh = SubResource("BoxMesh_2ls52")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Wall4" unique_id=1544476495]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 20, -10, 0.5, 0)
 shape = SubResource("BoxShape3D_noarx")
+
+[node name="Obstacle" type="StaticBody3D" parent="." unique_id=121486969]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle" unique_id=339168143]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle" unique_id=1411029782]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle2" type="StaticBody3D" parent="." unique_id=1655884190]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.611, 0.5, -3)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle2" unique_id=68711271]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle2" unique_id=1252460870]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle3" type="StaticBody3D" parent="." unique_id=1100245164]
+transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0.5, 3.4)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle3" unique_id=336215367]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle3" unique_id=1407407313]
+shape = SubResource("BoxShape3D_i5arm")
 
 [node name="Label" type="Label" parent="." unique_id=185234962]
 offset_right = 40.0
