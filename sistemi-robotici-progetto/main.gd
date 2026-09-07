@@ -1,6 +1,7 @@
 extends Node3D
 
 @onready var robot: RigidBody3D = $Robot
+@onready var obstacle: StaticBody3D = $Obstacle
 
 @onready var real_time_pos: Label = $"RealTimePos"
 @onready var real_time_vel: Label = $"RealTimeVel"
@@ -29,5 +30,7 @@ func _process(delta: float) -> void:
 	var vel = "%.3f" % robot.linear_velocity.x + " " + "%.3f" % robot.linear_velocity.z
 	real_time_pos.text = pos
 	real_time_vel.text = vel
+	
+	obstacle.position.x += 0.005
 
 	pass
