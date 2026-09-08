@@ -38,9 +38,6 @@ while True:
 
     now = time.time()
 
-    robot_pixel_z = int(robot_pos_z * map_scale) + center_pixel_z
-    robot_pixel_x = int(robot_pos_x * map_scale) + center_pixel_x
-
     rho_0 = 20
     F_rep_x = 0
     F_rep_z = 0
@@ -82,6 +79,8 @@ while True:
     dds.publish("target_x", robot_target_pos[0], dds.DDS_TYPE_FLOAT)
     dds.publish("target_z", robot_target_pos[1], dds.DDS_TYPE_FLOAT)
     robot_target_pixel = int(robot_target_pos[0] * map_scale) + center_pixel_x, int(robot_target_pos[1] * map_scale) + center_pixel_z
+    robot_pixel_z = int(robot_pos_z * map_scale) + center_pixel_z
+    robot_pixel_x = int(robot_pos_x * map_scale) + center_pixel_x
     cv2.arrowedLine(imm, (robot_pixel_x, robot_pixel_z), robot_target_pixel, (0, 255, 0), 3)
 
     valid_points.append((now + TTL, robot_pos_x, robot_pos_z, (255, 0, 0)))
