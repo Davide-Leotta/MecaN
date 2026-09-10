@@ -1,2 +1,4 @@
 venv/
 python/.ipynb_checkpoints/
+python/lib/__pycache__
+python/lib/.ipynb_checkpoints
