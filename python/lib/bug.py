@@ -10,8 +10,8 @@ W = 6
 SW = 7
 Z = 0
 X = 1
-M = 3
-L = 4
+M = 1
+L = 1.5
 
 class Bug:
     def __init__(self):
@@ -19,29 +19,32 @@ class Bug:
 
     def add_point(self,a,b):
         d = get_direction(a,b)
-        if d != -1:
+        if np.linalg.norm(np.array(b) - np.array(a)) < L:
             self.direction_count[d] += 1
+        else:
+            d = -1
         return d
 
     def rem_point(self,d):
-        self.direction_count[d] -= 1
- 
+        if d >= 0:
+            self.direction_count[d] = self.direction_count[d]/2
+        return True
     def start(self,robot_pos, target_pos):
-        self.d = target_direction(robot_pos,target_pos)
-        self.start_d = d
+        self.d = get_direction(robot_pos,target_pos)
 
     def detour(self,p):
         pos_start = np.array(p)
+        bugging = True
         vect= [0,0]
-        while self.direction_count[self.d] > 0:
-           self.d = (self.d + 1) % 8 
-           if self.d == self.start_d:
-            return False, 0, 0
-
-        if self.direction_count[((self.d + 7) % 8)] == 0:
-           self.d = (self.d + 7) % 8
-
-        match self.d:
+        d = self.d
+        while self.direction_count[d] > 0:
+           d = (d + 1) % 8 
+           if self.d == d:
+               bugging = False
+               d = -1
+               break
+        print(self.direction_count)
+        match d:
            case 0:
             vect = [M,0]
            case 1:
@@ -58,10 +61,12 @@ class Bug:
             vect = [0,-M]
            case 7:
             vect = [M,-M]
+           case -1:
+            vect = [0,0]
         
         point_to_move = pos_start + vect 
     
-        return True, point_to_move[Z], point_to_move[X]
+        return bugging, point_to_move[Z], point_to_move[X]
 
 
 def get_direction(a, b):
@@ -69,8 +74,6 @@ def get_direction(a, b):
     point_b = np.array(b)
     points_diff = point_b - point_a
     mod = np.linalg.norm(points_diff)
-    if mod > L:
-        return -1
     unit_vect = points_diff/mod
     if unit_vect[X] > 0:
         if unit_vect[Z] > 0:

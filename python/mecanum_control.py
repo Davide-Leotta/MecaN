@@ -3,6 +3,7 @@ from lib.dds import *
 from lib.time import *
 from lib.dataplot import *
 from lib.system import *
+from lib.bug import *
 from collections import deque
 import numpy as np
 import math
@@ -63,6 +64,9 @@ dds = DDS()
 dds.start()
 dds.subscribe(["posZ", "posX", "ang", "velZ","velX","velAng", "colliding", "obstacle_pos_z", "obstacle_pos_x"])
 
+bug = Bug()
+bugging = False
+
 TTL = 4.0
 
 valid_points = deque()
@@ -70,7 +74,8 @@ valid_points = deque()
 target_pos_x = 30
 target_pos_z = 30
 k_att = 0.2
-k_rep = 8
+k_rep = 4
+rho_0 = 2
 
 robot = MecanumController(2.5, 2, 50, 0.15, 1)
 posCon = PositionController(0.5, 0.5, 0.1)
@@ -89,11 +94,11 @@ while t.get() < 30:
 
     now = time.time()
 
-    rho_0 = 1
+   
     F_rep_x = 0
     F_rep_z = 0
 
-    for expire, obstacle_pos_x, obstacle_pos_z in valid_points:
+    for expire, obstacle_pos_x, obstacle_pos_z, _ in valid_points:
         dist = math.hypot(robot_pos_x - obstacle_pos_x, robot_pos_z - obstacle_pos_z)
         if 0 < dist < rho_0:
             F_rep_x += k_rep * (((1/dist) - (1/rho_0)) * (1/pow(dist, 3)) * (robot_pos_x - obstacle_pos_x))
@@ -101,20 +106,26 @@ while t.get() < 30:
 
     robot_F_z = k_att * (target_pos_z - robot_pos_z) + F_rep_z
     robot_F_x = k_att * (target_pos_x - robot_pos_x) + F_rep_x
-    robot_target_pos_z = robot_pos_z + robot_F_z
-    robot_target_pos_x = robot_pos_x + robot_F_x
-
+    
+    valid_points = [p for p in valid_points if p[0] >= now and bug.rem_point(p[3])]
 
     #append new obstacles
     if is_colliding:
         obstacle_pos_z = dds.read("obstacle_pos_z")
         obstacle_pos_x = dds.read("obstacle_pos_x")
+        d = bug.add_point([robot_pos_z,robot_pos_x],[obstacle_pos_z,obstacle_pos_x])
+        valid_points.append((now + TTL, obstacle_pos_x, obstacle_pos_z, d))
 
-        valid_points.append((now + TTL, obstacle_pos_x, obstacle_pos_z))
-
+    if abs(robot_F_z) < 0.1 and abs(robot_F_x) < 0.1 and (not (bugging)):
+        bug.start([robot_pos_z,robot_pos_x],[target_pos_z,target_pos_x])
+        bugging = True
     #pop expired points
-    while valid_points and valid_points[0][0] < now:
-        valid_points.popleft()
+
+    if bugging:
+        bugging, robot_target_pos_z, robot_target_pos_x = bug.detour([robot_pos_z,robot_pos_x])
+    else:
+        robot_target_pos_z = robot_pos_z + robot_F_z
+        robot_target_pos_x = robot_pos_x + robot_F_x
 
     target_p = np.array([robot_target_pos_z - robot_pos_z, robot_target_pos_x - robot_pos_x, 0 - ang])
     vel_target = posCon.evaluate(delta_t,target_p)
