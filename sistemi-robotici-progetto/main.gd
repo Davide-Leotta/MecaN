@@ -10,6 +10,7 @@ extends Node3D
 func _ready() -> void:
 	pass # Replace with function body.
 
+var obstacle_direction = 1
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	var posX: float = robot.position.x
@@ -31,6 +32,10 @@ func _process(delta: float) -> void:
 	real_time_pos.text = pos
 	real_time_vel.text = vel
 	
-	obstacle.position.x += 0.005
+	if obstacle.position.x > 15:
+		obstacle_direction = -1
+	if obstacle.position.x < 5:
+		obstacle_direction = 1
+	obstacle.position.x += obstacle_direction * 0.01
 
 	pass
