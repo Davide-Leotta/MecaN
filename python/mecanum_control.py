@@ -86,14 +86,25 @@ t.start()
 
 while t.get() < 120:
     delta_t = t.elapsed()
+    now = time.time()
 
     is_colliding = dds.read("colliding")
     robot_pos_z = dds.wait("posZ")
     robot_pos_x = dds.wait("posX")
     ang = dds.wait("ang")
+    velZ = dds.wait("velZ")
+    velX = dds.wait("velX")
+    velAng = dds.wait("velAng")
 
-    now = time.time()
 
+    if is_colliding:
+        obstacle_pos_z = dds.read("obstacle_pos_z")
+        obstacle_pos_x = dds.read("obstacle_pos_x")
+        bug.add_point([robot_pos_z,robot_pos_x],[obstacle_pos_z,obstacle_pos_x])
+        valid_points.append((now + TTL, obstacle_pos_x, obstacle_pos_z))
+
+
+    valid_points = [p for p in valid_points if p[0] >= now]
    
     F_rep_x = 0
     F_rep_z = 0
@@ -104,23 +115,19 @@ while t.get() < 120:
             F_rep_x += k_rep * (((1/dist) - (1/rho_0)) * (1/pow(dist, 3)) * (robot_pos_x - obstacle_pos_x))
             F_rep_z += k_rep * (((1/dist) - (1/rho_0)) * (1/pow(dist, 3)) * (robot_pos_z - obstacle_pos_z))
 
+
     robot_F_z = k_att * (target_pos_z - robot_pos_z) + F_rep_z
     robot_F_x = k_att * (target_pos_x - robot_pos_x) + F_rep_x
     
-    valid_points = [p for p in valid_points if p[0] >= now]
-    bug.clear_flag()
 
     #append new obstacles
-    if is_colliding:
-        obstacle_pos_z = dds.read("obstacle_pos_z")
-        obstacle_pos_x = dds.read("obstacle_pos_x")
-        bug.add_point([robot_pos_z,robot_pos_x],[obstacle_pos_z,obstacle_pos_x])
-        valid_points.append((now + TTL, obstacle_pos_x, obstacle_pos_z))
-
-    if abs(robot_F_z) < 0.1 and abs(robot_F_x) < 0.1 and (not (bugging)):
+    if abs(velZ) < 0.2 and abs(velX) < 0.2 and (not (bugging)):
         bug.start([robot_pos_z,robot_pos_x],[target_pos_z,target_pos_x])
         bugging = True
     #pop expired points
+
+
+    bug.clear_flag()
 
     if bugging:
         bugging, robot_target_pos_z, robot_target_pos_x = bug.detour([robot_pos_z,robot_pos_x])
@@ -128,13 +135,10 @@ while t.get() < 120:
         robot_target_pos_z = robot_pos_z + robot_F_z
         robot_target_pos_x = robot_pos_x + robot_F_x
 
+    
+
     target_p = np.array([robot_target_pos_z - robot_pos_z, robot_target_pos_x - robot_pos_x, 0 - ang])
     vel_target = posCon.evaluate(delta_t,target_p)
-
-    velZ = dds.wait("velZ")
-    velX = dds.wait("velX")
-    velAng = dds.wait("velAng")
-
     vel_sensor = np.array([velZ, velX, velAng])
     robot.set_target(vel_target)
     w = robot.evaluate(delta_t, vel_sensor)

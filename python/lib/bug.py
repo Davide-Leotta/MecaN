@@ -11,9 +11,9 @@ W = 6
 SW = 7
 Z = 0
 X = 1
-M = 1
-L = 2.5
-TTL = 1.5
+M = 2
+L = 3
+TTL = 1
 
 class Bug:
     def __init__(self):
@@ -21,11 +21,8 @@ class Bug:
 
     def add_point(self,a,b):
         d = get_direction(a,b)
-        v = get_vect(d)
-        if np.linalg.norm(np.array(b) - np.array(a) + v) < L:
-                self.direction_flag[(d+7)%8] = (1,time.time())
-                self.direction_flag[d] = (1,time.time())
-                self.direction_flag[(d+1)%8] = (1,time.time())
+        if np.linalg.norm(np.array(b) - np.array(a)) < L:
+            self.direction_flag[d] = (1,time.time())
 
     def start(self,robot_pos, target_pos):
         self.d = get_direction(robot_pos,target_pos)
@@ -60,7 +57,7 @@ class Bug:
         
         v = get_vect(self.d)
 
-        point_to_move = r_p + [u*2 for u in v]
+        point_to_move = r_p + v
     
         return bugging, point_to_move[Z], point_to_move[X]
 
