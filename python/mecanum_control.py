@@ -71,8 +71,8 @@ TTL = 4.0
 
 valid_points = deque()
 
-target_pos_x = 30
-target_pos_z = 30
+target_pos_x = 10
+target_pos_z = 10
 k_att = 0.2
 k_rep = 4
 rho_0 = 2
@@ -84,7 +84,7 @@ posCon = PositionController(0.5, 0.5, 0.1)
 t = Time()
 t.start()
 
-while t.get() < 30:
+while t.get() < 120:
     delta_t = t.elapsed()
 
     is_colliding = dds.read("colliding")
@@ -98,7 +98,7 @@ while t.get() < 30:
     F_rep_x = 0
     F_rep_z = 0
 
-    for expire, obstacle_pos_x, obstacle_pos_z, _ in valid_points:
+    for expire, obstacle_pos_x, obstacle_pos_z in valid_points:
         dist = math.hypot(robot_pos_x - obstacle_pos_x, robot_pos_z - obstacle_pos_z)
         if 0 < dist < rho_0:
             F_rep_x += k_rep * (((1/dist) - (1/rho_0)) * (1/pow(dist, 3)) * (robot_pos_x - obstacle_pos_x))
@@ -107,14 +107,15 @@ while t.get() < 30:
     robot_F_z = k_att * (target_pos_z - robot_pos_z) + F_rep_z
     robot_F_x = k_att * (target_pos_x - robot_pos_x) + F_rep_x
     
-    valid_points = [p for p in valid_points if p[0] >= now and bug.rem_point(p[3])]
+    valid_points = [p for p in valid_points if p[0] >= now]
+    bug.clear_flag()
 
     #append new obstacles
     if is_colliding:
         obstacle_pos_z = dds.read("obstacle_pos_z")
         obstacle_pos_x = dds.read("obstacle_pos_x")
-        d = bug.add_point([robot_pos_z,robot_pos_x],[obstacle_pos_z,obstacle_pos_x])
-        valid_points.append((now + TTL, obstacle_pos_x, obstacle_pos_z, d))
+        bug.add_point([robot_pos_z,robot_pos_x],[obstacle_pos_z,obstacle_pos_x])
+        valid_points.append((now + TTL, obstacle_pos_x, obstacle_pos_z))
 
     if abs(robot_F_z) < 0.1 and abs(robot_F_x) < 0.1 and (not (bugging)):
         bug.start([robot_pos_z,robot_pos_x],[target_pos_z,target_pos_x])
