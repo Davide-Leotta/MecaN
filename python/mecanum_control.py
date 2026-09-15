@@ -64,7 +64,7 @@ dds = DDS()
 dds.start()
 dds.subscribe(["posZ", "posX", "ang", "velZ","velX","velAng", "colliding", "obstacle_pos_z", "obstacle_pos_x"])
 
-bug = Bug(1.4,2)
+bug = Bug(1,2,2)
 bugging = False
 
 TTL = 4.0

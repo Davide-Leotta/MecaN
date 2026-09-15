@@ -17,9 +17,11 @@ TTL = 1
 TD = 8
 
 class Bug:
-    def __init__(self, r, m):
+    # r is the radius of robot, l is the max distance for obstacle avoidance, m is the moving proportional module
+    def __init__(self, r, l, m):
         self.direction_flag = [(0,0) for i in range(TD)]
         self.r = r
+        self.l = l
         self.m = m
 
 
@@ -128,15 +130,15 @@ class Bug:
     def check_robot_direction(self, center_point, obstacle_point):
         dir_set = set()
         dir_center = self.get_direction(center_point,obstacle_point)
-        if np.linalg.norm(obstacle_point - center_point) < 2*self.r:
+        if np.linalg.norm(obstacle_point - center_point) < self.l:
             dir_set.add(dir_center)
 
         left_v = self.get_vect((dir_center + 2)%TD, self.r)
-        if np.linalg.norm(obstacle_point - center_point + left_v) < 2*self.r:
+        if np.linalg.norm(obstacle_point - center_point + left_v) < self.l:
             dir_set.add(self.get_direction(center_point + left_v, obstacle_point))
 
         right_v = self.get_vect((dir_center + (TD - 2))%TD, self.r)
-        if np.linalg.norm(obstacle_point - center_point + right_v) < 2*self.r:
+        if np.linalg.norm(obstacle_point - center_point + right_v) < self.l:
             dir_set.add(self.get_direction(center_point + right_v, obstacle_point))
 
         return dir_set
