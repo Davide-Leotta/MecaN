@@ -64,7 +64,7 @@ dds = DDS()
 dds.start()
 dds.subscribe(["posZ", "posX", "ang", "velZ","velX","velAng", "colliding", "obstacle_pos_z", "obstacle_pos_x"])
 
-bug = Bug()
+bug = Bug(1.4,2)
 bugging = False
 
 TTL = 4.0
@@ -121,11 +121,11 @@ while t.get() < 120:
     
 
     #append new obstacles
-    if abs(velZ) < 0.2 and abs(velX) < 0.2 and (not (bugging)):
+    if abs(velZ) < 0.15 and abs(velX) < 0.15 and t.get() > 5 and (not (bugging)) and math.hypot(robot_pos_x -     target_pos_x, robot_pos_z - target_pos_z) > 2:
         bug.start([robot_pos_z,robot_pos_x],[target_pos_z,target_pos_x])
         bugging = True
-    #pop expired points
 
+    #pop expired points
 
     bug.clear_flag()
 
