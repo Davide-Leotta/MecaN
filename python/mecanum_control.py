@@ -4,6 +4,7 @@ from lib.time import *
 from lib.dataplot import *
 from lib.system import *
 from lib.bug import *
+from lib.pot_field import *
 from collections import deque
 import numpy as np
 import math
@@ -64,18 +65,16 @@ dds = DDS()
 dds.start()
 dds.subscribe(["posZ", "posX", "ang", "velZ","velX","velAng", "colliding", "obstacle_pos_z", "obstacle_pos_x"])
 
-bug = Bug(0.67,2.5,3)
-bugging = False
-
-TTL = 4.0
-
-valid_points = deque()
 
 target_pos_x = 10
 target_pos_z = 10
-k_att = 0.2
-k_rep = 4
-rho_0 = 2
+
+TTL = 4.0
+valid_points = deque()
+pot_field = PotField(0.5, 4, 3, target_pos_z, target_pos_x) #k_att, k_rep, rho_0
+
+bug = Bug(0.67,3,3)
+bugging = False
 
 robot = MecanumController(2.5, 2, 50, 0.15, 1)
 posCon = PositionController(0.5, 0.5, 0.1)
@@ -101,24 +100,10 @@ while t.get() < 120:
         obstacle_pos_z = dds.read("obstacle_pos_z")
         obstacle_pos_x = dds.read("obstacle_pos_x")
         bug.add_point([robot_pos_z,robot_pos_x],[obstacle_pos_z,obstacle_pos_x])
-        valid_points.append((now + TTL, obstacle_pos_x, obstacle_pos_z))
+        valid_points.append((now + TTL, obstacle_pos_x, obstacle_pos_z,(0,0,255)))
 
 
     valid_points = [p for p in valid_points if p[0] >= now]
-   
-    F_rep_x = 0
-    F_rep_z = 0
-
-    for expire, obstacle_pos_x, obstacle_pos_z in valid_points:
-        dist = math.hypot(robot_pos_x - obstacle_pos_x, robot_pos_z - obstacle_pos_z)
-        if 0 < dist < rho_0:
-            F_rep_x += k_rep * (((1/dist) - (1/rho_0)) * (1/pow(dist, 3)) * (robot_pos_x - obstacle_pos_x))
-            F_rep_z += k_rep * (((1/dist) - (1/rho_0)) * (1/pow(dist, 3)) * (robot_pos_z - obstacle_pos_z))
-
-
-    robot_F_z = k_att * (target_pos_z - robot_pos_z) + F_rep_z
-    robot_F_x = k_att * (target_pos_x - robot_pos_x) + F_rep_x
-    
 
     #append new obstacles
     if abs(velZ) < 0.15 and abs(velX) < 0.15 and t.get() > 5 and (not (bugging)) and math.hypot(robot_pos_x -     target_pos_x, robot_pos_z - target_pos_z) > 2:
@@ -132,10 +117,10 @@ while t.get() < 120:
     if bugging:
         bugging, robot_target_pos_z, robot_target_pos_x = bug.detour([robot_pos_z,robot_pos_x])
     else:
-        robot_target_pos_z = robot_pos_z + robot_F_z
-        robot_target_pos_x = robot_pos_x + robot_F_x
+        robot_target_pos_z, robot_target_pos_x = pot_field.evaluate(robot_pos_z, robot_pos_x, valid_points)
 
-    
+    dds.publish("temp_target_z", robot_target_pos_z, dds.DDS_TYPE_FLOAT)
+    dds.publish("temp_target_x", robot_target_pos_x, dds.DDS_TYPE_FLOAT)
 
     target_p = np.array([robot_target_pos_z - robot_pos_z, robot_target_pos_x - robot_pos_x, 0 - ang])
     vel_target = posCon.evaluate(delta_t,target_p)
