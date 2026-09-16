@@ -24,7 +24,6 @@ class Bug:
         self.l = l
         self.m = m
 
-
     def add_point(self,a,b):
         center_point = np.array(a)
         obstacle_point = np.array(b)
@@ -62,7 +61,7 @@ class Bug:
                 bugging = False
                 return bugging, 0 , 0
     
-        print([d for d,_ in self.direction_flag])
+        #print([d for d,_ in self.direction_flag])
         
         v = self.get_vect(self.d,self.m)
 
@@ -108,23 +107,24 @@ class Bug:
 
     def get_vect(self, d, m):
         vect = np.array([0,0])
+        mt = m * np.sqrt(2)/2
         match d:
             case 0:
                 vect = [m,0]
             case 1:
-                vect = [m,m]
+                vect = [mt,mt]
             case 2:
                 vect = [0,m]
             case 3:
-                vect = [-m,m]
+                vect = [-mt,mt]
             case 4:
                 vect = [-m,0]
             case 5:
-                vect = [-m,-m]
+                vect = [-mt,-mt]
             case 6:
                 vect = [0,-m]
             case 7:
-                vect = [m,-m]
+                vect = [mt,-mt]
         return vect 
     
     def check_robot_direction(self, center_point, obstacle_point):
