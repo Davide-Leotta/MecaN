@@ -73,11 +73,11 @@ TTL = 4.0
 valid_points = deque()
 pot_field = PotField(0.5, 4, 3, target_pos_z, target_pos_x) #k_att, k_rep, rho_0
 
-bug = Bug(0.67,3,3)
+bug = Bug(0.8,1.5,3)
 bugging = False
 
 robot = MecanumController(2.5, 2, 50, 0.15, 1)
-posCon = PositionController(0.5, 0.5, 0.1)
+posCon = PositionController(0.5, 0.5, 0.1, 1)
 
 
 t = Time()

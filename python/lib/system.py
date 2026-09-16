@@ -114,13 +114,24 @@ class VirtualRobot:
         return self.v * self.dir
 
 class PositionController:
-    def __init__(self, kz, kx, kt):
+    def __init__(self, kz, kx, kt, v_cruise):
         self.Pz = Proportional(kz)
         self.Px = Proportional(kx)
         self.Pt = Proportional(kt)
+        self.v_cruise = v_cruise
 
     def evaluate(self,delta_t,u):
         vz = self.Pz.evaluate(delta_t,u[0])
         vx = self.Px.evaluate(delta_t,u[1])
         vt = self.Pt.evaluate(delta_t,u[2])
-        return np.array([vz,vx,vt])
+        
+        vel = np.array([vz,vx])
+        vel_norm = np.linalg.norm(vel)
+
+        if vel_norm > self.v_cruise:
+            vel_unit = vel / vel_norm
+            vel = self.v_cruise * vel_unit
+    
+        vel = np.append(vel,vt)
+
+        return vel
