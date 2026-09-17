@@ -263,14 +263,14 @@ label_settings = SubResource("LabelSettings_a0tk4")
 offset_top = 42.0
 offset_right = 171.0
 offset_bottom = 84.0
-text = "PosX, PosY: "
+text = "PosX, PosZ: "
 label_settings = SubResource("LabelSettings_jka67")
 
 [node name="Label3" type="Label" parent="." unique_id=1351096310]
 offset_top = 84.0
 offset_right = 171.0
 offset_bottom = 126.0
-text = "VelX, VelY: "
+text = "VelX, VelZ: "
 label_settings = SubResource("LabelSettings_jka67")
 
 [node name="RealTimePos" type="Label" parent="." unique_id=1351947485]
