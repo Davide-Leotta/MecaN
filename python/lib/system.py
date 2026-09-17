@@ -18,7 +18,7 @@ class Integrator:
         out *= self.ki
         return out
 
-class Derivator
+class Derivator:
     def __init__(self,kd):
         self.prev = 0
         self.kd = kd
