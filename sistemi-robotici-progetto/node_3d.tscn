@@ -7,6 +7,8 @@
 [ext_resource type="ArrayMesh" uid="uid://cm3pctldnl3m6" path="res://Mecanum Wheel Right.obj" id="3_r3fl7"]
 [ext_resource type="Script" uid="uid://cjme2a6mk08rb" path="res://ray_cast_3d.gd" id="6_i5arm"]
 
+[sub_resource type="Environment" id="Environment_4xowi"]
+
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jka67"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
 ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -38,8 +40,6 @@ albedo_color = Color(0, 0, 1, 1)
 material = SubResource("StandardMaterial3D_a202f")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_a0tk4"]
-
-[sub_resource type="Environment" id="Environment_4xowi"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_a0tk4"]
 height = 33.61251
@@ -85,6 +85,25 @@ font_size = 30
 [node name="Main" type="Node3D" unique_id=824318672]
 script = ExtResource("1_r3fl7")
 
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=669732778]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer" unique_id=1119218714]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SubViewport2" type="SubViewport" parent="CanvasLayer/SubViewportContainer" unique_id=539440722]
+size = Vector2i(1920, 1080)
+
+[node name="Camera3D2" type="Camera3D" parent="CanvasLayer/SubViewportContainer/SubViewport2" unique_id=759205789]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 3.2, 3)
+environment = SubResource("Environment_4xowi")
+current = true
+
+[node name="SubViewport" type="SubViewport" parent="CanvasLayer/SubViewportContainer" unique_id=1383116501]
+
+[node name="Camera3D" type="Camera3D" parent="CanvasLayer/SubViewportContainer/SubViewport" unique_id=352459076]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 20, 8)
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=983545705]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
@@ -113,10 +132,6 @@ mesh = SubResource("BoxMesh_yjvqu")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Robot" unique_id=1471850091]
 transform = Transform3D(0.8, 0, 0, 0, 0.25, 0, 0, 0, 1.2, 0, 0, 0)
 shape = SubResource("BoxShape3D_a0tk4")
-
-[node name="Camera3D" type="Camera3D" parent="Robot" unique_id=759205789]
-transform = Transform3D(1, 0, 0, 0, 2.7881618, 0.85214597, 0, -2.7881618, 0.85214597, 0, 3, 1.5)
-environment = SubResource("Environment_4xowi")
 
 [node name="MecanumWheelFrontLeft" type="MeshInstance3D" parent="Robot" unique_id=1309192802]
 transform = Transform3D(-0.005, 0, -7.5497897e-10, 0, 0.005, 0, 7.5497897e-10, 0, -0.005, -0.5, 0, -0.5)
@@ -153,6 +168,10 @@ shape = SubResource("CylinderShape3D_i5arm")
 [node name="RayCast3D" type="RayCast3D" parent="Robot" unique_id=1052444387]
 transform = Transform3D(20, 0, 0, 0, -8.742278e-07, -20, 0, 20, -8.742278e-07, 0, 0, 0)
 script = ExtResource("6_i5arm")
+
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="Robot" unique_id=241087907]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 3, 3)
+remote_path = NodePath("../../CanvasLayer/SubViewportContainer/SubViewport2/Camera3D2")
 
 [node name="Wall1" type="StaticBody3D" parent="." unique_id=139047346]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)

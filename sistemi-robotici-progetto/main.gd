@@ -7,6 +7,7 @@ extends Node3D
 @onready var real_time_vel: Label = $"RealTimeVel"
 
 func _ready() -> void:
+	$CanvasLayer/SubViewportContainer/SubViewport.world_3d = get_viewport().world_3d
 	dds.subscribe("target_z")
 	dds.subscribe("target_x")
 	dds.subscribe("temp_target_z")
