@@ -18,6 +18,17 @@ class Integrator:
         out *= self.ki
         return out
 
+class Derivator
+    def __init__(self,kd):
+        self.prev = 0
+        self.kd = kd
+
+    def evaluate(self, delta_t, u):
+        out = (self.prev - u)/delta_t
+        self.prev = u
+        out *= self.kd
+        return out
+
 def saturate(inp, sat):
     if inp > sat:
         return (sat, True)
@@ -25,10 +36,11 @@ def saturate(inp, sat):
         return (-sat, True)
     return (inp, False)
 
-class PI:
-    def __init__(self, k , ki, sat):
+class PID:
+    def __init__(self, k , ki, kd, sat):
         self.P = Proportional(k)
         self.I = Integrator(ki)
+        self.D = Derivator(kd)
         self.sat = sat
         self.in_sat = False
 
@@ -40,6 +52,8 @@ class PI:
 
         else:
             out += self.I.evaluate(delta_t, u)
+        
+        out += self.D.evaluate(delta_t,u)
 
         out, self.in_sat = saturate(out, self.sat)
 
@@ -50,26 +64,20 @@ def inv_kin(v, r, l):
     return  (1/r) * np.dot([[-1, 1, -k_rot * l], [1, 1, -k_rot * l], [1, -1, -k_rot * l], [-1, -1, -k_rot * l]], v)
 
 class MecanumController:
-    def __init__(self, k, ki, sat, R, L):
-        self.PI_w1 = PI(k, ki, sat) 
-        self.PI_w2 = PI(k, ki, sat)
-        self.PI_w3 = PI(k, ki, sat)
-        self.PI_w4 = PI(k, ki, sat)
+    def __init__(self, k, ki, kd, sat, R, L):
+        self.PID_w1 = PID(k, ki, kd, sat) 
+        self.PID_w2 = PID(k, ki, kd, sat)
+        self.PID_w3 = PID(k, ki, kd, sat)
+        self.PID_w4 = PID(k, ki, kd, sat)
         self.R = R
         self.L = L
-        self.target = [0, 0, 0]
-
-    def set_target(self, v):
-        self.target = np.array(v)
 
     def evaluate(self, delta_t, u):
-        v  = np.round(self.target - u, 3)
-        err = inv_kin(v, self.R, self.L)
-        err = np.round(err, 2)
-        w1 = self.PI_w1.evaluate(delta_t, err[0])
-        w2 = self.PI_w2.evaluate(delta_t, err[1])
-        w3 = self.PI_w3.evaluate(delta_t, err[2])
-        w4 = self.PI_w4.evaluate(delta_t, err[3])
+        err = inv_kin(u, self.R, self.L)
+        w1 = self.PID_w1.evaluate(delta_t, err[0])
+        w2 = self.PID_w2.evaluate(delta_t, err[1])
+        w3 = self.PID_w3.evaluate(delta_t, err[2])
+        w4 = self.PID_w4.evaluate(delta_t, err[3])
         return [w1, w2, w3, w4]
 
 class VirtualRobot:
@@ -114,16 +122,14 @@ class VirtualRobot:
         return self.v * self.dir
 
 class PositionController:
-    def __init__(self, kz, kx, kt, v_cruise):
+    def __init__(self, kz, kx, v_cruise):
         self.Pz = Proportional(kz)
         self.Px = Proportional(kx)
-        self.Pt = Proportional(kt)
         self.v_cruise = v_cruise
 
     def evaluate(self,delta_t,u):
         vz = self.Pz.evaluate(delta_t,u[0])
         vx = self.Px.evaluate(delta_t,u[1])
-        vt = self.Pt.evaluate(delta_t,u[2])
         
         vel = np.array([vz,vx])
         vel_norm = np.linalg.norm(vel)
@@ -131,7 +137,17 @@ class PositionController:
         if vel_norm > self.v_cruise:
             vel_unit = vel / vel_norm
             vel = self.v_cruise * vel_unit
-    
-        vel = np.append(vel,vt)
 
         return vel
+
+
+class OrientationController:
+    def __init__(self,k, w_max):
+        self.P = Proportional(k)
+        self.w_max = w_max
+
+    def evaluate(self,delta_t,u):
+        w = self.P.evaluate(delta_t,u)
+        w = saturate(w,self.w_max)
+
+        return w

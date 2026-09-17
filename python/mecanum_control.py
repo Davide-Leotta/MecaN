@@ -73,11 +73,12 @@ TTL = 4.0
 valid_points = deque()
 pot_field = PotField(0.5, 4, 3, target_pos_z, target_pos_x) #k_att, k_rep, rho_0
 
-bug = Bug(0.8,1.5,3)
+weight_dist = 2
+bug = Bug(0.8,weight_dist,3)
 bugging = False
 
-robot = MecanumController(2.5, 2, 50, 0.15, 1)
-posCon = PositionController(0.5, 0.5, 0.1, 1)
+robot = MecanumController(2.5, 2, 0, 50, 0.15, 1)
+pos_con = PositionController(0.5, 0.5, 0.1, 1)
 
 
 t = Time()
@@ -106,7 +107,7 @@ while t.get() < 120:
     valid_points = [p for p in valid_points if p[0] >= now]
 
     #append new obstacles
-    if abs(velZ) < 0.15 and abs(velX) < 0.15 and t.get() > 5 and (not (bugging)) and math.hypot(robot_pos_x -     target_pos_x, robot_pos_z - target_pos_z) > 2:
+    if np.linalg.norm([velZ,velX]) < 0.15 and t.get() > 5 and (not (bugging)) and math.hypot(robot_pos_x -     target_pos_x, robot_pos_z - target_pos_z) > 2:
         bug.start([robot_pos_z,robot_pos_x],[target_pos_z,target_pos_x])
         bugging = True
 
@@ -122,11 +123,11 @@ while t.get() < 120:
     dds.publish("temp_target_z", robot_target_pos_z, dds.DDS_TYPE_FLOAT)
     dds.publish("temp_target_x", robot_target_pos_x, dds.DDS_TYPE_FLOAT)
 
-    target_p = np.array([robot_target_pos_z - robot_pos_z, robot_target_pos_x - robot_pos_x, 0 - ang])
-    vel_target = posCon.evaluate(delta_t,target_p)
+    target_p = np.array([robot_target_pos_z - robot_pos_z, robot_target_pos_x - robot_pos_x])
+    vel_target = pos_con.evaluate(delta_t,target_p)
+    np.append(vel_target,0)
     vel_sensor = np.array([velZ, velX, velAng])
-    robot.set_target(vel_target)
-    w = robot.evaluate(delta_t, vel_sensor)
+    w = robot.evaluate(delta_t, vel_sensor - vel_target)
 
     dds.publish("w1", w[0], dds.DDS_TYPE_FLOAT)
     dds.publish("w2", w[1], dds.DDS_TYPE_FLOAT)
