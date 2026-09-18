@@ -43,7 +43,7 @@ func _process(delta: float) -> void:
 		obstacle_direction = -1
 	if obstacle.position.x < 5:
 		obstacle_direction = 1
-	obstacle.position.x += obstacle_direction * 0.01
+	obstacle.position.x += obstacle_direction * 0.005
 	
 	var temp_target_z = dds.read("temp_target_z")
 	var temp_target_x = dds.read("temp_target_x")

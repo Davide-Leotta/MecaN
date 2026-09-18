@@ -1,9 +1,9 @@
 extends RayCast3D
 
-var speed = 1
+var speed = 20
 
 func _process(delta: float) -> void:
-	self.rotate_y(speed)
+	self.rotate_y(speed * delta)
 	var colliding = self.is_colliding()
 	if colliding:
 		dds.publish("colliding", dds.DDS_TYPE_INT, 1)
