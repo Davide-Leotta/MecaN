@@ -13,7 +13,7 @@ SW = 7
 Z = 0
 X = 1
 
-TTL = 1
+TTL = 0.5
 TD = 8
 
 class Bug:
@@ -55,7 +55,7 @@ class Bug:
            if self.d == ini_dir:
             break
 
-        if self.direction_flag[(self.d + (TD-1)) % TD][0] == 0:
+        if self.direction_flag[(self.d + (TD-1)) % TD][0] == 0 :
             self.d = (self.d + (TD-1)) % TD
             if self.d == target_dir:
                 bugging = False
