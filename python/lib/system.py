@@ -24,7 +24,7 @@ class Derivator:
         self.kd = kd
 
     def evaluate(self, delta_t, u):
-        out = (self.prev - u)/delta_t
+        out = (u - self.prev) / delta_t
         self.prev = u
         out *= self.kd
         return out
@@ -52,8 +52,8 @@ class PID:
 
         else:
             out += self.I.evaluate(delta_t, u)
-        
-        out += self.D.evaluate(delta_t,u)
+
+        out += self.D.evaluate(delta_t, u)
 
         out, self.in_sat = saturate(out, self.sat)
 
@@ -85,7 +85,7 @@ class VirtualRobot:
     CRUISE = 1
     DEC = 2
     TARGET = 3
-    
+
     def __init__(self,p_target,acc,v_max,dec):
         self.dir = 1 if p_target >= 0 else -1
         self.p_target = abs(p_target)
@@ -104,6 +104,7 @@ class VirtualRobot:
                 self.p = self.p + self.v * delta_t + ((1/2) * self.acc * delta_t * delta_t )
                 self.v = self.v + self.acc * delta_t
                 if self.v >= self.v_max:
+                    self.v = self.v_max
                     self.phase = VirtualRobot.CRUISE
                 if (self.p + (self.v * self.v) / ( 2 * self.dec)) >= self.p_target:
                     self.phase = VirtualRobot.DEC
@@ -116,38 +117,30 @@ class VirtualRobot:
                 self.v = self.v - self.dec * delta_t
                 if self.v < 0:
                     self.v = 0
+                    self.p = self.p_target
                     self.phase = VirtualRobot.TARGET
             case VirtualRobot.TARGET:
                 self.v = 0
         return self.v * self.dir
 
 class PositionController:
-    def __init__(self, kz, kx, v_cruise):
-        self.Pz = Proportional(kz)
-        self.Px = Proportional(kx)
-        self.v_cruise = v_cruise
+    def __init__(self, k, ki, kd, v_cruise):
+        self.Pz = PID(k, ki, kd, v_cruise)
+        self.Px = PID(k, ki, kd, v_cruise)
 
-    def evaluate(self,delta_t,u):
-        vz = self.Pz.evaluate(delta_t,u[0])
-        vx = self.Px.evaluate(delta_t,u[1])
-        
-        vel = np.array([vz,vx])
-        vel_norm = np.linalg.norm(vel)
+    def evaluate(self, delta_t, u):
+        vz = self.Pz.evaluate(delta_t, u[0])
+        vx = self.Px.evaluate(delta_t, u[1])
 
-        if vel_norm > self.v_cruise:
-            vel_unit = vel / vel_norm
-            vel = self.v_cruise * vel_unit
+        vel = np.array([vz, vx])
 
         return vel
 
-
 class OrientationController:
-    def __init__(self,k, w_max):
-        self.P = Proportional(k)
-        self.w_max = w_max
+    def __init__(self, k, ki, kd, w_max):
+        self.PID = PID(k, ki, kd, w_max)
 
-    def evaluate(self,delta_t,u):
-        w = self.P.evaluate(delta_t,u)
-        w = saturate(w,self.w_max)
+    def evaluate(self, delta_t, u):
+        w = self.PID.evaluate(delta_t, u)
 
         return w
