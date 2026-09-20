@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 class Proportional:
     def __init__(self, k):
@@ -144,3 +145,11 @@ class OrientationController:
         w = self.PID.evaluate(delta_t, u)
 
         return w
+
+def global_to_local(ang, global_coordinates):
+    rad = math.radians(ang)
+    rot_matrix = np.array([
+        [math.cos(rad), math.sin(rad)],
+        [-math.sin(rad), math.cos(rad)]
+    ])
+    return rot_matrix.dot(global_coordinates)
