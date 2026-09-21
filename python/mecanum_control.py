@@ -10,124 +10,141 @@ import numpy as np
 import math
 import time
 
-PLTS_N = 10
+PLTS_N = 3
 plts = [DataPlotter() for i in range(PLTS_N)]
 
 plts[0] = DataPlotter()
 plts[0].set_x("Time ")
 plts[0].add_y("posZ", "Position Z")
+plts[0].add_y("target", "target")
 
 plts[1] = DataPlotter()
 plts[1].set_x("Time ")
 plts[1].add_y("posX", "Position X")
-#plts[1].add_y("target", "target")
+plts[1].add_y("target", "target")
 
 plts[2] = DataPlotter()
 plts[2].set_x("Time")
 plts[2].add_y("ang", "Rotation")
-#plts[2].add_y("target", "target")
+plts[2].add_y("target", "target")
 
-plts[3] = DataPlotter()
-plts[3].set_x("Time")
-plts[3].add_y("velZ", "Velocity Z")
+#plts[3] = DataPlotter()
+#plts[3].set_x("Time")
+#plts[3].add_y("velZ", "Velocity Z")
 #plts[3].add_y("virtual","virtual")
 
-plts[4] = DataPlotter()
-plts[4].set_x("Time")
-plts[4].add_y("velX", "Velocity X")
+#plts[4] = DataPlotter()
+#plts[4].set_x("Time")
+#plts[4].add_y("velX", "Velocity X")
 #plts[4].add_y("virtual","virtual")
-
-plts[5] = DataPlotter()
-plts[5].set_x("Time")
-plts[5].add_y("velAng", "Rotational Velocity")
+#
+#plts[5] = DataPlotter()
+#plts[5].set_x("Time")
+#plts[5].add_y("velAng", "Rotational Velocity")
 #plts[5].add_y("virtual","virtual")
-
-plts[6] = DataPlotter()
-plts[6].set_x("Time")
-plts[6].add_y("w1", "FrontLeft Motor")
-
-
-plts[7] = DataPlotter()
-plts[7].set_x("Time")
-plts[7].add_y("w2", "FrontRight Motor")
-
-
-plts[8] = DataPlotter()
-plts[8].set_x("Time")
-plts[8].add_y("w3", "ReerRight Motor")
-
-
-plts[9] = DataPlotter()
-plts[9].set_x("Time")
-plts[9].add_y("w4", "ReerLeft Motor")
+#
+#plts[6] = DataPlotter()
+#plts[6].set_x("Time")
+#plts[6].add_y("w1", "FrontLeft Motor")
+#
+#
+#plts[7] = DataPlotter()
+#plts[7].set_x("Time")
+#plts[7].add_y("w2", "FrontRight Motor")
+#
+#
+#plts[8] = DataPlotter()
+#plts[8].set_x("Time")
+#plts[8].add_y("w3", "ReerRight Motor")
+#
+#
+#plts[9] = DataPlotter()
+#plts[9].set_x("Time")
+#plts[9].add_y("w4", "ReerLeft Motor")
 
 dds = DDS()
 dds.start()
 dds.subscribe(["posZ", "posX", "ang", "velZ","velX","velAng", "colliding", "obstacle_pos_z", "obstacle_pos_x"])
 
 
-target_pos_x = 10
-target_pos_z = 10
-
 TTL = 4.0
 valid_points = deque()
-pot_field = PotField(0.5, 4, 3, target_pos_z, target_pos_x) #k_att, k_rep, rho_0
 
-weight_dist = 2
-bug = Bug(0.8,weight_dist,3)
+global_target_pos_x = -5
+global_target_pos_z = 0
+ang_target = 120
+
+dds.publish("target_z", global_target_pos_z, dds.DDS_TYPE_FLOAT) 
+dds.publish("target_x", global_target_pos_x, dds.DDS_TYPE_FLOAT) 
+
+pot_field = PotField(0.5, 4, 3, global_target_pos_z, global_target_pos_x) #k_att, k_rep, rho_0
+bug = Bug(1,2,3)
 bugging = False
 
-robot = MecanumController(2.5, 2, 0, 50, 0.15, 1)
-pos_con = PositionController(0.5, 0.5, 0.1, 1)
+robot = MecanumController(1, 1, 0.008, 15, 0.15, 1)
+pos_con = PositionController(3, 0.1, 0.005, 4)
+ori_con = OrientationController(0.5, 0.5, 0.1, 3)
 
-
+pos_z = dds.wait("posZ")
+pos_x = dds.wait("posX")
+ang = dds.wait("ang")
+ 
 t = Time()
 t.start()
 
-while t.get() < 120:
+while math.hypot(global_target_pos_z - pos_z, global_target_pos_x - pos_x) > 0.1 or abs(ang_target - ang) > 0.3:
     delta_t = t.elapsed()
     now = time.time()
 
     is_colliding = dds.read("colliding")
-    robot_pos_z = dds.wait("posZ")
-    robot_pos_x = dds.wait("posX")
+    pos_z = dds.wait("posZ")
+    pos_x = dds.wait("posX")
     ang = dds.wait("ang")
-    velZ = dds.wait("velZ")
-    velX = dds.wait("velX")
-    velAng = dds.wait("velAng")
+    vel_z = dds.wait("velZ")
+    vel_x = dds.wait("velX")
+    ang_vel = dds.wait("velAng")
 
 
     if is_colliding:
         obstacle_pos_z = dds.read("obstacle_pos_z")
         obstacle_pos_x = dds.read("obstacle_pos_x")
-        bug.add_point([robot_pos_z,robot_pos_x],[obstacle_pos_z,obstacle_pos_x])
+        bug.add_point([pos_z,pos_x],[obstacle_pos_z,obstacle_pos_x])
         valid_points.append((now + TTL, obstacle_pos_x, obstacle_pos_z,(0,0,255)))
 
 
     valid_points = [p for p in valid_points if p[0] >= now]
 
     #append new obstacles
-    if np.linalg.norm([velZ,velX]) < 0.15 and t.get() > 5 and (not (bugging)) and math.hypot(robot_pos_x -     target_pos_x, robot_pos_z - target_pos_z) > 2:
-        bug.start([robot_pos_z,robot_pos_x],[target_pos_z,target_pos_x])
+    if np.linalg.norm([vel_z,vel_x]) < 0.15 and t.get() > 1 and (not bugging):
+        bug.start([pos_z,pos_x],[global_target_pos_z, global_target_pos_x])
         bugging = True
 
     #pop expired points
 
     bug.clear_flag()
 
-    if bugging:
-        bugging, robot_target_pos_z, robot_target_pos_x = bug.detour([robot_pos_z,robot_pos_x])
+    #if math.hypot(global_target_pos_z - pos_z, global_target_pos_z - pos_x) < 0.5:
+    if True:
+        rel_target_pos_z = global_target_pos_z
+        rel_target_pos_x = global_target_pos_x
+    
+    elif bugging:
+        bugging, rel_target_pos_z, rel_target_pos_x = bug.detour([pos_z,pos_x])
     else:
-        robot_target_pos_z, robot_target_pos_x = pot_field.evaluate(robot_pos_z, robot_pos_x, valid_points)
+        rel_target_pos_z, rel_target_pos_x = pot_field.evaluate(pos_z, pos_x, valid_points)
 
-    dds.publish("temp_target_z", robot_target_pos_z, dds.DDS_TYPE_FLOAT)
-    dds.publish("temp_target_x", robot_target_pos_x, dds.DDS_TYPE_FLOAT)
+    dds.publish("temp_target_z", rel_target_pos_z, dds.DDS_TYPE_FLOAT)
+    dds.publish("temp_target_x", rel_target_pos_x, dds.DDS_TYPE_FLOAT)
 
-    target_p = np.array([robot_target_pos_z - robot_pos_z, robot_target_pos_x - robot_pos_x])
-    vel_target = pos_con.evaluate(delta_t,target_p)
-    np.append(vel_target,0)
-    vel_sensor = np.array([velZ, velX, velAng])
-    w = robot.evaluate(delta_t, vel_sensor - vel_target)
+    global_pos_err = np.array([rel_target_pos_z - pos_z, rel_target_pos_x - pos_x])
+    global_v_err = pos_con.evaluate(delta_t,global_pos_err) - np.array([vel_z,vel_x])
+    local_v_err = global_to_local(ang,global_v_err)
+
+    ang_err = (ang_target - ang + 180) % 360 - 180
+    ang_vel_err = ori_con.evaluate(delta_t,ang_err) - ang_vel
+
+    vel_err = np.append(local_v_err,ang_vel_err)
+    w = robot.evaluate(delta_t, vel_err)
 
     dds.publish("w1", w[0], dds.DDS_TYPE_FLOAT)
     dds.publish("w2", w[1], dds.DDS_TYPE_FLOAT)
@@ -135,40 +152,40 @@ while t.get() < 120:
     dds.publish("w4", w[3], dds.DDS_TYPE_FLOAT)
 
     plts[0].append_x(t.get())
-    plts[0].append_y("posZ", robot_pos_z)
-    #plts[0].append_y("target", -15)
+    plts[0].append_y("posZ", pos_z)
+    plts[0].append_y("target", global_target_pos_z)
 
     plts[1].append_x(t.get())
-    plts[1].append_y("posX", robot_pos_x)
-    #plts[1].append_y("target", -5)
+    plts[1].append_y("posX", pos_x)
+    plts[1].append_y("target", global_target_pos_x)
 
     plts[2].append_x(t.get())
     plts[2].append_y("ang", ang)
-    #plts[2].append_y("target", np.rad2deg(1))
+    plts[2].append_y("target", ang_target)
 
-    plts[3].append_x(t.get())
-    plts[3].append_y("velZ", velZ)
+    #plts[3].append_x(t.get())
+    #plts[3].append_y("velZ", vel_z)
     #plts[3].append_y("virtual", vz)
 
-    plts[4].append_x(t.get())
-    plts[4].append_y("velX", velX)
+    #plts[4].append_x(t.get())
+    #plts[4].append_y("velX", vel_x)
     #plts[4].append_y("virtual", vx)
 
-    plts[5].append_x(t.get())
-    plts[5].append_y("velAng", velAng)
+    #plts[5].append_x(t.get())
+    #plts[5].append_y("velAng", ang_vel)
     #plts[5].append_y("virtual", va)
 
-    plts[6].append_x(t.get())
-    plts[6].append_y("w1", w[0])
+    #plts[6].append_x(t.get())
+    #plts[6].append_y("w1", w[0])
 
-    plts[7].append_x(t.get())
-    plts[7].append_y("w2", w[1])
+    #plts[7].append_x(t.get())
+    #plts[7].append_y("w2", w[1])
 
-    plts[8].append_x(t.get())
-    plts[8].append_y("w3", w[2])
+    #plts[8].append_x(t.get())
+    #plts[8].append_y("w3", w[2])
 
-    plts[9].append_x(t.get())
-    plts[9].append_y("w4", w[3])
+    #plts[9].append_x(t.get())
+    #plts[9].append_y("w4", w[3])
     
 dds.publish("w1", 0, dds.DDS_TYPE_FLOAT)
 dds.publish("w2", 0, dds.DDS_TYPE_FLOAT)
