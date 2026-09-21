@@ -1,15 +1,17 @@
+from typing import Deque, Tuple
+from numpy.typing import NDArray
 import math
 
 
 class PotField:
-    def __init__(self, k_att, k_rep, rho_0, target_pos_z, target_pos_x):
+    def __init__(self, k_att: float, k_rep: float, rho_0: float, target_pos_z: float, target_pos_x: float):
         self.k_att = k_att
         self.k_rep = k_rep
         self.rho_0 = rho_0
         self.target_pos_z = target_pos_z
         self.target_pos_x = target_pos_x
 
-    def evaluate(self, robot_pos_z, robot_pos_x, valid_points):
+    def evaluate(self, robot_pos_z: float, robot_pos_x: float, valid_points: Deque[Tuple[int, float, float, Tuple[int, int, int]]]) -> Tuple[float, float]:
         #calculate attractive forces
         F_att_z = self.k_att * (self.target_pos_z - robot_pos_z)
         F_att_x = self.k_att * (self.target_pos_x - robot_pos_x)

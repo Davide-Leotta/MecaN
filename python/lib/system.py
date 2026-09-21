@@ -1,36 +1,38 @@
+from typing import Tuple
+from numpy.typing import NDArray
 import numpy as np
 import math
 
 class Proportional:
-    def __init__(self, k):
+    def __init__(self, k: float):
         self.k = k
 
-    def evaluate(self, delta_t, u):
+    def evaluate(self, delta_t: float, u: float) -> float:
         return u * self.k
 
 class Integrator:
-    def __init__(self, ki):
+    def __init__(self, ki: float):
         self.acc = 0
         self.ki = ki
 
-    def evaluate(self, delta_t, u):
+    def evaluate(self, delta_t: float, u: float) -> float:
         out = self.acc + u * delta_t
         self.acc = out
         out *= self.ki
         return out
 
 class Derivator:
-    def __init__(self,kd):
+    def __init__(self,kd: float):
         self.prev = 0
         self.kd = kd
 
-    def evaluate(self, delta_t, u):
+    def evaluate(self, delta_t: float, u: float) -> float:
         out = (u - self.prev) / delta_t
         self.prev = u
         out *= self.kd
         return out
 
-def saturate(inp, sat):
+def saturate(inp: float, sat: float) -> Tuple[float,bool]:
     if inp > sat:
         return (sat, True)
     elif inp < -sat:
@@ -38,14 +40,14 @@ def saturate(inp, sat):
     return (inp, False)
 
 class PID:
-    def __init__(self, k , ki, kd, sat):
+    def __init__(self, k: float , ki: float, kd: float, sat: float):
         self.P = Proportional(k)
         self.I = Integrator(ki)
         self.D = Derivator(kd)
         self.sat = sat
         self.in_sat = False
 
-    def evaluate(self, delta_t, u):
+    def evaluate(self, delta_t: float, u: float) -> float:
         out = self.P.evaluate(delta_t, u)
 
         if self.in_sat:
@@ -60,12 +62,12 @@ class PID:
 
         return out
 
-def inv_kin(v, r, l):
+def inv_kin(v: NDArray[float], r: float, l: float) -> NDArray[float]:
     k_rot = 0.6
     return  (1/r) * np.dot([[-1, 1, -k_rot * l], [1, 1, -k_rot * l], [1, -1, -k_rot * l], [-1, -1, -k_rot * l]], v)
 
 class MecanumController:
-    def __init__(self, k, ki, kd, sat, R, L):
+    def __init__(self, k: float, ki: float, kd: float, sat: float, R: float, L: float):
         self.PID_w1 = PID(k, ki, kd, sat) 
         self.PID_w2 = PID(k, ki, kd, sat)
         self.PID_w3 = PID(k, ki, kd, sat)
@@ -73,7 +75,7 @@ class MecanumController:
         self.R = R
         self.L = L
 
-    def evaluate(self, delta_t, u):
+    def evaluate(self, delta_t: float, u: float) -> NDArray[float]:
         err = inv_kin(u, self.R, self.L)
         w1 = self.PID_w1.evaluate(delta_t, err[0])
         w2 = self.PID_w2.evaluate(delta_t, err[1])
@@ -87,7 +89,7 @@ class VirtualRobot:
     DEC = 2
     TARGET = 3
 
-    def __init__(self,p_target,acc,v_max,dec):
+    def __init__(self,p_target: float,acc: float,v_max: float,dec: float):
         self.dir = 1 if p_target >= 0 else -1
         self.p_target = abs(p_target)
         self.acc = abs(acc)
@@ -99,7 +101,7 @@ class VirtualRobot:
         #self.t_dec = self.t_acc + (self.p_target/self.v_max) - (self.v_max /(2 * self.acc)) - (self.v_max)/(2 * self.dec)
         self.phase = VirtualRobot.ACC
 
-    def evaluate(self,delta_t):
+    def evaluate(self,delta_t: float) -> float:
         match self.phase:
             case VirtualRobot.ACC:
                 self.p = self.p + self.v * delta_t + ((1/2) * self.acc * delta_t * delta_t )
@@ -125,28 +127,26 @@ class VirtualRobot:
         return self.v * self.dir
 
 class PositionController:
-    def __init__(self, k, ki, kd, v_cruise):
+    def __init__(self, k: float, ki: float, kd: float, v_cruise: float):
         self.Pz = PID(k, ki, kd, v_cruise)
         self.Px = PID(k, ki, kd, v_cruise)
 
-    def evaluate(self, delta_t, u):
+    def evaluate(self, delta_t: float, u: NDArray[float]) -> NDArray[float]:
         vz = self.Pz.evaluate(delta_t, u[0])
         vx = self.Px.evaluate(delta_t, u[1])
-
         vel = np.array([vz, vx])
-
         return vel
 
 class OrientationController:
-    def __init__(self, k, ki, kd, w_max):
+    def __init__(self, k: float, ki: float, kd: float, w_max: float):
         self.PID = PID(k, ki, kd, w_max)
 
-    def evaluate(self, delta_t, u):
+    def evaluate(self, delta_t: float, u: float) -> float:
         w = self.PID.evaluate(delta_t, u)
 
         return w
 
-def global_to_local(ang, global_coordinates):
+def global_to_local(ang: float, global_coordinates: NDArray[float]) -> NDArray[float]:
     rad = math.radians(ang)
     rot_matrix = np.array([
         [math.cos(rad), math.sin(rad)],

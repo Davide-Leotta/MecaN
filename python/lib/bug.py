@@ -1,3 +1,5 @@
+from typing import Tuple, Set
+from numpy.typing import NDArray
 import numpy as np
 import time
 
@@ -18,25 +20,25 @@ TD = 8
 
 class Bug:
     # r is the radius of robot, l is the max distance for obstacle avoidance, m is the moving proportional module
-    def __init__(self, r, l, m):
+    def __init__(self, r: float, l: float, m: float):
         self.direction_flag = [(0,0) for i in range(TD)]
         self.r = r
         self.l = l
         self.m = m
 
-    def add_point(self,a,b):
+    def add_point(self, a: NDArray[float], b: NDArray[float]):
         center_point = np.array(a)
         obstacle_point = np.array(b)
         dir_set = self.check_robot_direction(center_point,obstacle_point)
         for d in dir_set:
            self.direction_flag[d] = (1,time.time())
 
-    def start(self,robot_pos, target_pos):
+    def start(self,robot_pos: NDArray[float], target_pos: NDArray[float]):
         r = np.array(robot_pos)
         self.target = np.array(target_pos)
         self.d = self.get_direction(r,self.target)
 
-    def set_target(self,target_pos):
+    def set_target(self, target_pos: NDArray[float]):
         self.target = np.array(target_pos)
     
     def clear_flag(self):
@@ -44,7 +46,7 @@ class Bug:
             if self.direction_flag[i][0] > 0  and (time.time() - self.direction_flag[i][1]) > TTL:
                 self.direction_flag[i] = (0,0) 
 
-    def detour(self,p):
+    def detour(self, p: NDArray[float]) -> Tuple[bool,float,float]:
         robot_pos = np.array(p)
         bugging = True
         target_dir = self.get_direction(robot_pos, self.target)
@@ -69,7 +71,7 @@ class Bug:
     
         return bugging, point_to_move[Z], point_to_move[X]
 
-    def get_direction(self, a, b):
+    def get_direction(self, a: NDArray[float], b: NDArray[float]) -> int:
         points_diff = b - a
         mod = np.linalg.norm(points_diff)
         unit_vect = points_diff/mod
@@ -105,7 +107,7 @@ class Bug:
                     direction = S
         return direction
 
-    def get_vect(self, d, m):
+    def get_vect(self, d: int, m: float) -> NDArray[float]:
         vect = np.array([0,0])
         mt = m * np.sqrt(2)/2
         match d:
@@ -127,7 +129,7 @@ class Bug:
                 vect = [mt,-mt]
         return vect 
     
-    def check_robot_direction(self, center_point, obstacle_point):
+    def check_robot_direction(self, center_point: NDArray[float], obstacle_point: NDArray[float]) -> Set[int]:
         dir_set = set()
         dir_center = self.get_direction(center_point,obstacle_point)
         if np.linalg.norm(obstacle_point - center_point) < self.l:
