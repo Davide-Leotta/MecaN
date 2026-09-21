@@ -81,9 +81,9 @@ pot_field = PotField(0.5, 4, 3, global_target_pos_z, global_target_pos_x) #k_att
 bug = Bug(1,2,3)
 bugging = False
 
-robot = MecanumController(1, 1, 0.008, 15, 0.15, 1)
-pos_con = PositionController(3, 0.1, 0.005, 4)
-ori_con = OrientationController(0.5, 0.5, 0.1, 3)
+robot = MecanumController(1, 2.5, 0, 15, 0.15, 0.5)
+pos_con = PositionController(3, 0 , 0, 4)
+ori_con = OrientationController(0.1, 0, 0, 3)
 
 pos_z = dds.wait("posZ")
 pos_x = dds.wait("posX")
@@ -92,7 +92,7 @@ ang = dds.wait("ang")
 t = Time()
 t.start()
 
-while math.hypot(global_target_pos_z - pos_z, global_target_pos_x - pos_x) > 0.1 or abs(ang_target - ang) > 0.3:
+while math.hypot(global_target_pos_z - pos_z, global_target_pos_x - pos_x) > 0.2 or abs(ang_target - ang) > 0.3:
     delta_t = t.elapsed()
     now = time.time()
 
