@@ -38,6 +38,14 @@ func _ready():
 func _physics_process(delta):
 	debug_mesh.clear_surfaces()
 	
+	if Input.is_action_pressed("ui_cancel"):
+		self.position.x = 0
+		self.position.y = 0.2
+		self.position.z = 0
+		self.rotation.x = 0
+		self.rotation.y = 0
+		self.rotation.z = 0
+	
 	var fl = 0.0
 	var fr = 0.0
 	var rr = 0.0
@@ -53,6 +61,7 @@ func _physics_process(delta):
 		fl += 5.0; fr += 5.0; rr -= 5.0; rl -= 5.0
 	if Input.is_action_pressed("ui_left"):
 		fl -= 5.0; fr -= 5.0; rr += 5.0; rl += 5.0
+		
 
 	if fl != 0 or fr != 0 or rr != 0 or rl != 0:
 		applica_forze_motori(fl, fr, rr, rl)

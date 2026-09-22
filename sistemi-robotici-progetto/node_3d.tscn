@@ -345,6 +345,21 @@ mesh = SubResource("BoxMesh_xghog")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle2" unique_id=1252460870]
 shape = SubResource("BoxShape3D_i5arm")
 
+[node name="Obstacle18" type="StaticBody3D" parent="." unique_id=1206705298]
+transform = Transform3D(-8.742278e-07, 0, 1, 0, 1, 0, -20, 0, -4.371139e-08, 29.909554, 0.5, -56.015297)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle18" unique_id=346023855]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle16" type="StaticBody3D" parent="." unique_id=790862168]
+transform = Transform3D(-8.742278e-07, 0, 1, 0, 1, 0, -20, 0, -4.371139e-08, -2, 0.5, -55)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle16" unique_id=1856073677]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle16" unique_id=521887130]
+shape = SubResource("BoxShape3D_i5arm")
+
 [node name="Obstacle3" type="StaticBody3D" parent="." unique_id=1100245164]
 transform = Transform3D(-6.556708e-07, 0, 1, 0, 1, 0, -15, 0, -4.371139e-08, 3, 0.5, -1.5)
 
@@ -363,6 +378,42 @@ mesh = SubResource("BoxMesh_xghog")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle4" unique_id=853074947]
 shape = SubResource("BoxShape3D_i5arm")
 
+[node name="Obstacle17" type="StaticBody3D" parent="." unique_id=877433756]
+transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.5, -65)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle17" unique_id=332639779]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle17" unique_id=609127326]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle14" type="StaticBody3D" parent="." unique_id=519734293]
+transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.5, -45)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle14" unique_id=553491154]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle14" unique_id=1184692781]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle15" type="StaticBody3D" parent="." unique_id=89255975]
+transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.5, -55)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle15" unique_id=992519724]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle15" unique_id=514573442]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle19" type="StaticBody3D" parent="." unique_id=1933528114]
+transform = Transform3D(30, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.5, -75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle19" unique_id=558854502]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle19" unique_id=1088818892]
+shape = SubResource("BoxShape3D_i5arm")
+
 [node name="Obstacle5" type="StaticBody3D" parent="." unique_id=1213862316]
 transform = Transform3D(15, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0.5, -9)
 
@@ -370,4 +421,130 @@ transform = Transform3D(15, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0.5, -9)
 mesh = SubResource("BoxMesh_xghog")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle5" unique_id=1264486503]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle13" type="StaticBody3D" parent="." unique_id=1708081929]
+transform = Transform3D(12.990381, 0, 0.5, 0, 1, 0, -7.5, 0, 0.8660254, 24.5, 0.5, -11)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle13" unique_id=1622141724]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle13" unique_id=1740738940]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle6" type="StaticBody3D" parent="." unique_id=60578964]
+transform = Transform3D(-1.3113416e-06, 0, 1, 0, 1, 0, -30, 0, -4.371139e-08, 18, 0.5, -30)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle6" unique_id=1167084905]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle6" unique_id=993226218]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle7" type="StaticBody3D" parent="." unique_id=1524862656]
+transform = Transform3D(-2.6226833e-06, 0, 1, 0, 1, 0, -60, 0, -4.371139e-08, 30, 0.5, -45)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle7" unique_id=922368189]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle7" unique_id=1662374755]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle8" type="StaticBody3D" parent="." unique_id=1244799874]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0.5, -23)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle8" unique_id=747167164]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle8" unique_id=825313758]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle9" type="StaticBody3D" parent="." unique_id=571122836]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.5, -18)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle9" unique_id=1123908466]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle9" unique_id=117014249]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle10" type="StaticBody3D" parent="." unique_id=2064823897]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.5, -26)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle10" unique_id=384252673]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle10" unique_id=1498027526]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle11" type="StaticBody3D" parent="." unique_id=883851267]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0.5, -30)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle11" unique_id=1431283759]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle11" unique_id=367641271]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle12" type="StaticBody3D" parent="." unique_id=295620128]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0.5, -36)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle12" unique_id=1124538327]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle12" unique_id=812468471]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle20" type="StaticBody3D" parent="." unique_id=894745020]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.649565, 0.50000095, -72.33091)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle20" unique_id=44905445]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle20" unique_id=1278453117]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle21" type="StaticBody3D" parent="." unique_id=789716191]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.762969, 0.50000286, -66.04597)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle21" unique_id=138444328]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle21" unique_id=1646938845]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle22" type="StaticBody3D" parent="." unique_id=126892393]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.70369, 0.50000286, -73.45001)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle22" unique_id=292282417]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle22" unique_id=1287934657]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle23" type="StaticBody3D" parent="." unique_id=1693188375]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.285963, 0.50000286, -65.29261)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle23" unique_id=335535894]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle23" unique_id=760091903]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle24" type="StaticBody3D" parent="." unique_id=504925315]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.4188, 0.50000286, -74.40194)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle24" unique_id=1509670379]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle24" unique_id=1863794745]
+shape = SubResource("BoxShape3D_i5arm")
+
+[node name="Obstacle25" type="StaticBody3D" parent="." unique_id=226726434]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.523384, 0.50000286, -65.95888)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle25" unique_id=316623886]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle25" unique_id=879784033]
 shape = SubResource("BoxShape3D_i5arm")
