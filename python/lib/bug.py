@@ -53,22 +53,19 @@ class Bug:
         ini_dir = self.d
 
         while self.direction_flag[self.d][0] > 0:
-           self.d = (self.d + 1) % TD 
-           if self.d == ini_dir:
-            break
+            self.d = (self.d + 1) % TD 
+            if self.d == ini_dir:
+                return bugging, robot_pos[Z], robot_pos[X] 
 
         if self.direction_flag[(self.d + (TD-1)) % TD][0] == 0 :
             self.d = (self.d + (TD-1)) % TD
-            if self.d == target_dir:
-                bugging = False
-                return bugging, 0 , 0
-    
-        #print([d for d,_ in self.direction_flag])
-        
-        v = self.get_vect(self.d,self.m)
 
+        if self.d == target_dir:
+            bugging = False
+
+        v = self.get_vect(self.d, self.m)
         point_to_move = robot_pos + v
-    
+
         return bugging, point_to_move[Z], point_to_move[X]
 
     def get_direction(self, a: NDArray[float], b: NDArray[float]) -> int:
@@ -112,21 +109,21 @@ class Bug:
         mt = m * np.sqrt(2)/2
         match d:
             case 0:
-                vect = [m,0]
+                vect = [m, 0]
             case 1:
-                vect = [mt,mt]
+                vect = [mt, mt]
             case 2:
-                vect = [0,m]
+                vect = [0, m]
             case 3:
-                vect = [-mt,mt]
+                vect = [-mt, mt]
             case 4:
-                vect = [-m,0]
+                vect = [-m, 0]
             case 5:
-                vect = [-mt,-mt]
+                vect = [-mt, -mt]
             case 6:
-                vect = [0,-m]
+                vect = [0, -m]
             case 7:
-                vect = [mt,-mt]
+                vect = [mt, mt]
         return vect 
     
     def check_robot_direction(self, center_point: NDArray[float], obstacle_point: NDArray[float]) -> Set[int]:
@@ -136,11 +133,11 @@ class Bug:
             dir_set.add(dir_center)
 
         left_v = self.get_vect((dir_center + 2)%TD, self.r)
-        if np.linalg.norm(obstacle_point - center_point + left_v) < self.l:
+        if np.linalg.norm(obstacle_point - (center_point + left_v)) < self.l:
             dir_set.add(self.get_direction(center_point + left_v, obstacle_point))
 
         right_v = self.get_vect((dir_center + (TD - 2))%TD, self.r)
-        if np.linalg.norm(obstacle_point - center_point + right_v) < self.l:
+        if np.linalg.norm(obstacle_point - (center_point + right_v)) < self.l:
             dir_set.add(self.get_direction(center_point + right_v, obstacle_point))
 
         return dir_set
