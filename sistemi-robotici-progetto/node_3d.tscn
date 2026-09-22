@@ -9,6 +9,26 @@
 
 [sub_resource type="Environment" id="Environment_4xowi"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_a0tk4"]
+font_size = 50
+outline_size = 20
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_wc5p8"]
+font_size = 30
+outline_size = 20
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_jka67"]
+font_size = 30
+outline_size = 20
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_i5arm"]
+font_size = 30
+outline_size = 20
+outline_color = Color(0, 0, 0, 1)
+
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jka67"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
 ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -73,40 +93,131 @@ material = SubResource("StandardMaterial3D_wc5p8")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_i5arm"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_a0tk4"]
-font_size = 30
-
-[sub_resource type="LabelSettings" id="LabelSettings_jka67"]
-font_size = 30
-
-[sub_resource type="LabelSettings" id="LabelSettings_i5arm"]
-font_size = 30
-
 [node name="Main" type="Node3D" unique_id=824318672]
 script = ExtResource("1_r3fl7")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=669732778]
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer" unique_id=1119218714]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="SubViewportContainer2" type="SubViewportContainer" parent="CanvasLayer" unique_id=1671825637]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
 
-[node name="SubViewport2" type="SubViewport" parent="CanvasLayer/SubViewportContainer" unique_id=539440722]
+[node name="SubViewport" type="SubViewport" parent="CanvasLayer/SubViewportContainer2" unique_id=1354707590]
 handle_input_locally = false
 size = Vector2i(1920, 1080)
 render_target_update_mode = 4
 
-[node name="Camera3D2" type="Camera3D" parent="CanvasLayer/SubViewportContainer/SubViewport2" unique_id=759205789]
+[node name="Camera3D2" type="Camera3D" parent="CanvasLayer/SubViewportContainer2/SubViewport" unique_id=759205789]
 transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 3.2, 3)
 environment = SubResource("Environment_4xowi")
 current = true
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer" unique_id=1119218714]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -512.0
+offset_bottom = 512.0
+grow_horizontal = 0
+stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/SubViewportContainer" unique_id=1383116501]
 handle_input_locally = false
 render_target_update_mode = 4
 
 [node name="Camera3D" type="Camera3D" parent="CanvasLayer/SubViewportContainer/SubViewport" unique_id=352459076]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 20, 8)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 10.2, 0)
+
+[node name="Label" type="Label" parent="CanvasLayer" unique_id=185234962]
+offset_right = 295.0
+offset_bottom = 42.0
+text = "Mecanum robot"
+label_settings = SubResource("LabelSettings_a0tk4")
+vertical_alignment = 2
+
+[node name="Label2" type="Label" parent="CanvasLayer" unique_id=106751308]
+offset_top = 80.0
+offset_right = 192.0
+offset_bottom = 122.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+text = "position (x, z): "
+label_settings = SubResource("LabelSettings_wc5p8")
+vertical_alignment = 2
+
+[node name="Label3" type="Label" parent="CanvasLayer" unique_id=1351096310]
+offset_top = 110.0
+offset_right = 172.0
+offset_bottom = 152.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+text = "velocity (x, z): "
+label_settings = SubResource("LabelSettings_jka67")
+vertical_alignment = 2
+
+[node name="Label4" type="Label" parent="CanvasLayer" unique_id=1070969998]
+offset_top = 50.0
+offset_right = 264.0
+offset_bottom = 92.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+text = "target (x, z): "
+label_settings = SubResource("LabelSettings_jka67")
+vertical_alignment = 2
+
+[node name="Label5" type="Label" parent="CanvasLayer" unique_id=320775391]
+offset_top = 140.0
+offset_right = 264.0
+offset_bottom = 182.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+text = "path_mode: "
+label_settings = SubResource("LabelSettings_jka67")
+vertical_alignment = 2
+
+[node name="RealTimePos" type="Label" parent="CanvasLayer" unique_id=1351947485]
+offset_left = 200.0
+offset_top = 80.0
+offset_right = 242.0
+offset_bottom = 122.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+label_settings = SubResource("LabelSettings_i5arm")
+vertical_alignment = 2
+
+[node name="TargetPos" type="Label" parent="CanvasLayer" unique_id=1424614847]
+offset_left = 200.0
+offset_top = 50.0
+offset_right = 242.0
+offset_bottom = 92.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+label_settings = SubResource("LabelSettings_i5arm")
+vertical_alignment = 2
+
+[node name="RealTimeVel" type="Label" parent="CanvasLayer" unique_id=455494401]
+offset_left = 200.0
+offset_top = 110.0
+offset_right = 242.0
+offset_bottom = 152.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+label_settings = SubResource("LabelSettings_i5arm")
+vertical_alignment = 2
+
+[node name="PathType" type="Label" parent="CanvasLayer" unique_id=63627265]
+offset_left = 200.0
+offset_top = 140.0
+offset_right = 242.0
+offset_bottom = 182.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+label_settings = SubResource("LabelSettings_i5arm")
+vertical_alignment = 2
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=983545705]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
@@ -175,7 +286,11 @@ script = ExtResource("6_i5arm")
 
 [node name="RemoteTransform3D" type="RemoteTransform3D" parent="Robot" unique_id=241087907]
 transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 3, 3)
-remote_path = NodePath("../../CanvasLayer/SubViewportContainer/SubViewport2/Camera3D2")
+remote_path = NodePath("../../CanvasLayer/SubViewportContainer2/SubViewport/Camera3D2")
+
+[node name="RemoteTransform3D2" type="RemoteTransform3D" parent="Robot" unique_id=205330665]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 10, 0)
+remote_path = NodePath("../../CanvasLayer/SubViewportContainer/SubViewport/Camera3D")
 
 [node name="Wall1" type="StaticBody3D" parent="." unique_id=139047346]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
@@ -221,17 +336,8 @@ mesh = SubResource("BoxMesh_2ls52")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 20, -10, 0.5, 0)
 shape = SubResource("BoxShape3D_noarx")
 
-[node name="Obstacle" type="StaticBody3D" parent="." unique_id=121486969]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.5, 13)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle" unique_id=339168143]
-mesh = SubResource("BoxMesh_xghog")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle" unique_id=1411029782]
-shape = SubResource("BoxShape3D_i5arm")
-
 [node name="Obstacle2" type="StaticBody3D" parent="." unique_id=1655884190]
-transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 1, 2.611, 0.5, -4)
+transform = Transform3D(-8.742278e-07, 0, 1, 0, 1, 0, -20, 0, -4.371139e-08, -3, 0.5, -4)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle2" unique_id=68711271]
 mesh = SubResource("BoxMesh_xghog")
@@ -239,23 +345,8 @@ mesh = SubResource("BoxMesh_xghog")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle2" unique_id=1252460870]
 shape = SubResource("BoxShape3D_i5arm")
 
-[node name="Label" type="Label" parent="." unique_id=185234962]
-offset_right = 40.0
-offset_bottom = 23.0
-text = "Mecanum robot test"
-label_settings = SubResource("LabelSettings_a0tk4")
-
-[node name="Obstacle4" type="StaticBody3D" parent="." unique_id=1530659131]
-transform = Transform3D(-6.556708e-07, 0, 1, 0, 1, 0, -15, 0, -4.371139e-08, 2.6, 0.5, 8)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle4" unique_id=1753773924]
-mesh = SubResource("BoxMesh_xghog")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle4" unique_id=392447786]
-shape = SubResource("BoxShape3D_i5arm")
-
 [node name="Obstacle3" type="StaticBody3D" parent="." unique_id=1100245164]
-transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0.5, 3.4)
+transform = Transform3D(-6.556708e-07, 0, 1, 0, 1, 0, -15, 0, -4.371139e-08, 3, 0.5, -1.5)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle3" unique_id=336215367]
 mesh = SubResource("BoxMesh_xghog")
@@ -263,30 +354,20 @@ mesh = SubResource("BoxMesh_xghog")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle3" unique_id=1407407313]
 shape = SubResource("BoxShape3D_i5arm")
 
-[node name="Label2" type="Label" parent="." unique_id=106751308]
-offset_top = 42.0
-offset_right = 171.0
-offset_bottom = 84.0
-text = "PosX, PosZ: "
-label_settings = SubResource("LabelSettings_jka67")
+[node name="Obstacle4" type="StaticBody3D" parent="." unique_id=1295426220]
+transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.5, -15)
 
-[node name="Label3" type="Label" parent="." unique_id=1351096310]
-offset_top = 84.0
-offset_right = 171.0
-offset_bottom = 126.0
-text = "VelX, VelZ: "
-label_settings = SubResource("LabelSettings_jka67")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle4" unique_id=1543421689]
+mesh = SubResource("BoxMesh_xghog")
 
-[node name="RealTimePos" type="Label" parent="." unique_id=1351947485]
-offset_left = 171.0
-offset_top = 42.0
-offset_right = 213.0
-offset_bottom = 84.0
-label_settings = SubResource("LabelSettings_i5arm")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle4" unique_id=853074947]
+shape = SubResource("BoxShape3D_i5arm")
 
-[node name="RealTimeVel" type="Label" parent="." unique_id=455494401]
-offset_left = 171.0
-offset_top = 84.0
-offset_right = 213.0
-offset_bottom = 126.0
-label_settings = SubResource("LabelSettings_i5arm")
+[node name="Obstacle5" type="StaticBody3D" parent="." unique_id=1213862316]
+transform = Transform3D(15, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0.5, -9)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle5" unique_id=2086721412]
+mesh = SubResource("BoxMesh_xghog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle5" unique_id=1264486503]
+shape = SubResource("BoxShape3D_i5arm")

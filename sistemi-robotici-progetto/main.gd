@@ -1,57 +1,62 @@
 extends Node3D
 
 @onready var robot: RigidBody3D = $Robot
-@onready var obstacle: StaticBody3D = $Obstacle
 
-@onready var real_time_pos: Label = $"RealTimePos"
-@onready var real_time_vel: Label = $"RealTimeVel"
+@onready var real_time_pos: Label = $CanvasLayer/RealTimePos
+@onready var real_time_vel: Label = $CanvasLayer/RealTimeVel
+@onready var target_pos: Label = $CanvasLayer/TargetPos
+@onready var path_type_label: Label = $CanvasLayer/PathType
 
 func _ready() -> void:
 	$CanvasLayer/SubViewportContainer/SubViewport.world_3d = get_viewport().world_3d
 	dds.subscribe("target_z")
 	dds.subscribe("target_x")
-	dds.subscribe("temp_target_z")
-	dds.subscribe("temp_target_x")
+	dds.subscribe("tmp_target_z")
+	dds.subscribe("tmp_target_x")
+	dds.subscribe("path_type")
 	pass
 
-var obstacle_direction = 1
-
-var temp_target_arrow: MeshInstance3D
+var tmp_target_arrow: MeshInstance3D
 var final_target_arrow: MeshInstance3D
 
 func _process(delta: float) -> void:
-	var posX: float = robot.position.x
-	var posZ: float = robot.position.z
+	var pos_z: float = robot.position.z
+	var pos_x: float = robot.position.x
 	var ang: float = rad_to_deg(robot.rotation.y)
-	var velX: float = robot.linear_velocity.x
-	var velZ: float = robot.linear_velocity.z
-	var velAng: float = robot.angular_velocity.y
+	var vel_x: float = robot.linear_velocity.x
+	var vel_z: float = robot.linear_velocity.z
+	var vel_ang: float = robot.angular_velocity.y
+	
+	var target_z = dds.read("target_z")
+	var target_x = dds.read("target_x")
+	var path_type = dds.read("path_type")
 
-	dds.publish("posX", dds.DDS_TYPE_FLOAT, posX)
-	dds.publish("posZ", dds.DDS_TYPE_FLOAT, posZ)
+	dds.publish("pos_z", dds.DDS_TYPE_FLOAT, pos_z)
+	dds.publish("pos_x", dds.DDS_TYPE_FLOAT, pos_x)
 	dds.publish("ang", dds.DDS_TYPE_FLOAT, ang)
-	dds.publish("velX", dds.DDS_TYPE_FLOAT, velX)
-	dds.publish("velZ", dds.DDS_TYPE_FLOAT, velZ)
-	dds.publish("velAng", dds.DDS_TYPE_FLOAT, velAng)
+	dds.publish("vel_x", dds.DDS_TYPE_FLOAT, vel_x)
+	dds.publish("vel_z", dds.DDS_TYPE_FLOAT, vel_z)
+	dds.publish("vel_ang", dds.DDS_TYPE_FLOAT, vel_ang)
 	
 	var pos = "%.3f" % robot.position.x + " " + "%.3f" % robot.position.z
 	var vel = "%.3f" % robot.linear_velocity.x + " " + "%.3f" % robot.linear_velocity.z
+	if target_x and target_z:
+		var trg = "%.3f" % target_x + " " + "%.3f" % target_z
+		target_pos.text = trg
 	real_time_pos.text = pos
 	real_time_vel.text = vel
+
+	if path_type != null:
+		if path_type == 0:
+			path_type_label.text = "Potential Field"
+		elif path_type == 1:
+			path_type_label.text = "Bug-0"
 	
-	if obstacle.position.x > 15:
-		obstacle_direction = -1
-	if obstacle.position.x < 5:
-		obstacle_direction = 1
-	obstacle.position.x += obstacle_direction * 0.005
-	
-	var temp_target_z = dds.read("temp_target_z")
-	var temp_target_x = dds.read("temp_target_x")
-	if temp_target_x != null and temp_target_z != null:
-		temp_target_arrow = spawn_or_update_arrow(temp_target_arrow, temp_target_x, temp_target_z, Color.BLUE)
+	var tmp_target_z = dds.read("tmp_target_z")
+	var tmp_target_x = dds.read("tmp_target_x")
+	if tmp_target_x != null and tmp_target_z != null:
+		tmp_target_arrow = spawn_or_update_arrow(tmp_target_arrow, tmp_target_x, tmp_target_z, Color.BLUE)
 		
-	var target_z = dds.read("target_z")
-	var target_x = dds.read("target_x")
 	if target_x != null and target_z != null:
 		final_target_arrow = spawn_or_update_arrow(final_target_arrow, target_x, target_z, Color.GREEN)
 
