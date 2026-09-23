@@ -4,7 +4,7 @@ import math
 
 
 class PotField:
-    def __init__(self, k_att: float, k_rep: float, rho_0: float, target_pos_z: float, target_pos_x: float):
+    def __init__(self, k_att: float, k_rep: float, rho_0: float, target_pos_z: Optional[float] = None, target_pos_x: Optional[float] = None):
         self.k_att = k_att
         self.k_rep = k_rep
         self.rho_0 = rho_0
@@ -36,3 +36,9 @@ class PotField:
         robot_target_pos_x = robot_pos_x + robot_F_x
 
         return robot_target_pos_z, robot_target_pos_x
+
+    def set_target(self,target_pos_z: float, target_pos_x: float):
+        self.target_pos_z = target_pos_z
+        self.target_pos_x = target_pos_x
+
+
