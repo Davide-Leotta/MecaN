@@ -291,6 +291,8 @@ remote_path = NodePath("../../CanvasLayer/SubViewportContainer2/SubViewport/Came
 [node name="RemoteTransform3D2" type="RemoteTransform3D" parent="Robot" unique_id=205330665]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 10, 0)
 remote_path = NodePath("../../CanvasLayer/SubViewportContainer/SubViewport/Camera3D")
+update_rotation = false
+update_scale = false
 
 [node name="Wall1" type="StaticBody3D" parent="." unique_id=139047346]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
