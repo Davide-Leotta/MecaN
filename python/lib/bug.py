@@ -1,7 +1,7 @@
-from typing import Tuple, Set
+from typing import Tuple
 from numpy.typing import NDArray
 import numpy as np
-import time
+import math
 
 S = 0
 SE = 1
@@ -15,63 +15,50 @@ SW = 7
 Z = 0
 X = 1
 
-TTL = 0.5
 TD = 8
 
 class Bug:
     # r is the radius of robot, l is the max distance for obstacle avoidance, m is the moving proportional module
     def __init__(self, r: float, l: float, m: float):
-        self.direction_flag = [(0,0) for i in range(TD)]
+        self.direction_flag = [0 for i in range(TD)]
         self.r = r
         self.l = l
         self.m = m
-
-    def add_point(self, a: NDArray[float], b: NDArray[float]):
-        center_point = np.array(a)
-        obstacle_point = np.array(b)
-        dir_set = self.check_robot_direction(center_point,obstacle_point)
-        for d in dir_set:
-           self.direction_flag[d] = (1,time.time())
-
-    def start(self,robot_pos: NDArray[float], target_pos: NDArray[float]):
-        r = np.array(robot_pos)
-        self.target = np.array(target_pos)
-        self.d = self.get_direction(r,self.target)
-
-    def set_target(self, target_pos: NDArray[float]):
-        self.target = np.array(target_pos)
+        self.target = np.array([0,0])
     
-    def clear_flag(self):
+    def start(self, target):
+        self.target = np.array(target)
+
+    def get_position(self, pos , queue) -> Tuple[bool,float,float]:
+        robot_pos = np.array(pos)
+        points = [np.array([pt[2],pt[1]]) for pt in queue if math.hypot(pt[2] - robot_pos[0],pt[1] - robot_pos[1]) < self.l]
+        
+        for p in points:
+            for d in self.check_robot_direction(robot_pos,p):
+                self.direction_flag[d] = 1
+        
+        dir_target = self.get_direction(self.target - robot_pos)
+        bugging = False
+        chs_target = dir_target
+    
         for i in range(TD):
-            if self.direction_flag[i][0] > 0  and (time.time() - self.direction_flag[i][1]) > TTL:
-                self.direction_flag[i] = (0,0) 
-
-    def detour(self, p: NDArray[float]) -> Tuple[bool,float,float]:
-        robot_pos = np.array(p)
-        bugging = True
-        target_dir = self.get_direction(robot_pos, self.target)
-        ini_dir = self.d
-
-        while self.direction_flag[self.d][0] > 0:
-            self.d = (self.d + 1) % TD 
-            if self.d == ini_dir:
-                return bugging, robot_pos[Z], robot_pos[X] 
-
-        if self.direction_flag[(self.d + (TD-1)) % TD][0] == 0 :
-            self.d = (self.d + (TD-1)) % TD
-
-        if self.d == target_dir:
-            bugging = False
-
-        v = self.get_vect(self.d, self.m)
+            if self.direction_flag[(dir_target + i) % TD] == 0:
+                chs_target = (dir_target + i) % TD
+                if chs_target != dir_target:
+                    bugging = True
+                break
+       
+        v = self.get_vect(chs_target, self.m)
         point_to_move = robot_pos + v
+        
+        
+        self.direction_flag[(chs_target + (TD - 1))%TD] = 0
 
         return bugging, point_to_move[Z], point_to_move[X]
 
-    def get_direction(self, a: NDArray[float], b: NDArray[float]) -> int:
-        points_diff = b - a
-        mod = np.linalg.norm(points_diff)
-        unit_vect = points_diff/mod
+    def get_direction(self, array: NDArray[float]) -> int:
+        mod = np.linalg.norm(array)
+        unit_vect = array/mod
         if unit_vect[X] > 0:
             if unit_vect[Z] > 0:
                 if unit_vect[X] <= 1/2:
@@ -123,21 +110,21 @@ class Bug:
             case 6:
                 vect = [0, -m]
             case 7:
-                vect = [mt, mt]
+                vect = [mt, -mt]
         return vect 
     
-    def check_robot_direction(self, center_point: NDArray[float], obstacle_point: NDArray[float]) -> Set[int]:
+    def check_robot_direction(self, center_point, obstacle_point):
         dir_set = set()
-        dir_center = self.get_direction(center_point,obstacle_point)
+        dir_center = self.get_direction(obstacle_point - center_point)
         if np.linalg.norm(obstacle_point - center_point) < self.l:
             dir_set.add(dir_center)
 
         left_v = self.get_vect((dir_center + 2)%TD, self.r)
         if np.linalg.norm(obstacle_point - (center_point + left_v)) < self.l:
-            dir_set.add(self.get_direction(center_point + left_v, obstacle_point))
+            dir_set.add(self.get_direction(obstacle_point - (center_point + left_v)))
 
         right_v = self.get_vect((dir_center + (TD - 2))%TD, self.r)
         if np.linalg.norm(obstacle_point - (center_point + right_v)) < self.l:
-            dir_set.add(self.get_direction(center_point + right_v, obstacle_point))
+            dir_set.add(self.get_direction(obstacle_point - (center_point + right_v)))
 
         return dir_set

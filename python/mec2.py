@@ -3,7 +3,7 @@ from lib.dds import *
 from lib.time import *
 from lib.dataplot import *
 from lib.system import *
-from lib.bug2 import *
+from python.lib.bug import *
 from lib.pot_field import *
 from collections import deque
 import numpy as np
