@@ -1,6 +1,6 @@
 extends RayCast3D
 
-var speed = 20
+var speed = 30
 
 func _process(delta: float) -> void:
 	self.rotate_y(speed * delta)

@@ -10,7 +10,7 @@ var front_right_direction = Vector3(1, 0, 1)
 var rear_right_direction = Vector3(-1, 0, 1)
 var rear_left_direction = Vector3(-1, 0, -1)
 
-# --- Variabili per il Debug 3D ---
+# Variabili per il Debug 3D
 var debug_mesh: ImmediateMesh
 var debug_mesh_instance: MeshInstance3D
 
@@ -25,8 +25,6 @@ func _ready():
 	mat.vertex_color_use_as_albedo = true
 	debug_mesh_instance.material_override = mat
 	
-	# Impostiamo top_level a true così la mesh non ruota insieme all'auto
-	# ma rimane ancorata al sistema di coordinate globali
 	debug_mesh_instance.top_level = true
 	add_child(debug_mesh_instance)
 	
@@ -112,7 +110,6 @@ func applica_forze_motori(fl: float, fr: float, rr: float, rl: float):
 	mecanum_wheel_front_right.rotate_x(fr * 0.025)
 	mecanum_wheel_rear_right.rotate_x(rr * 0.025)
 	mecanum_wheel_rear_left.rotate_x(rl * -0.025)
-
 # Funzione per disegnare linee nello spazio 3D
 func draw_line(inizio: Vector3, fine: Vector3, colore: Color):
 	debug_mesh.surface_begin(Mesh.PRIMITIVE_LINES)

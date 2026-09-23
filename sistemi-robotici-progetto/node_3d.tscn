@@ -287,6 +287,7 @@ script = ExtResource("6_i5arm")
 [node name="RemoteTransform3D" type="RemoteTransform3D" parent="Robot" unique_id=241087907]
 transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 3, 3)
 remote_path = NodePath("../../CanvasLayer/SubViewportContainer2/SubViewport/Camera3D2")
+update_scale = false
 
 [node name="RemoteTransform3D2" type="RemoteTransform3D" parent="Robot" unique_id=205330665]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 10, 0)
@@ -381,7 +382,7 @@ mesh = SubResource("BoxMesh_xghog")
 shape = SubResource("BoxShape3D_i5arm")
 
 [node name="Obstacle17" type="StaticBody3D" parent="." unique_id=877433756]
-transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.5, -65)
+transform = Transform3D(70, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0.5, -65)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle17" unique_id=332639779]
 mesh = SubResource("BoxMesh_xghog")
@@ -408,7 +409,7 @@ mesh = SubResource("BoxMesh_xghog")
 shape = SubResource("BoxShape3D_i5arm")
 
 [node name="Obstacle19" type="StaticBody3D" parent="." unique_id=1933528114]
-transform = Transform3D(30, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.5, -75)
+transform = Transform3D(80, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.5, -80)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle19" unique_id=558854502]
 mesh = SubResource("BoxMesh_xghog")
@@ -444,7 +445,7 @@ mesh = SubResource("BoxMesh_xghog")
 shape = SubResource("BoxShape3D_i5arm")
 
 [node name="Obstacle7" type="StaticBody3D" parent="." unique_id=1524862656]
-transform = Transform3D(-2.6226833e-06, 0, 1, 0, 1, 0, -60, 0, -4.371139e-08, 30, 0.5, -45)
+transform = Transform3D(-2.8412403e-06, 0, 1, 0, 1, 0, -65, 0, -4.371139e-08, 30, 0.5, -47.5)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle7" unique_id=922368189]
 mesh = SubResource("BoxMesh_xghog")
@@ -453,7 +454,7 @@ mesh = SubResource("BoxMesh_xghog")
 shape = SubResource("BoxShape3D_i5arm")
 
 [node name="Obstacle8" type="StaticBody3D" parent="." unique_id=1244799874]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0.5, -23)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0.5, -22)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle8" unique_id=747167164]
 mesh = SubResource("BoxMesh_xghog")
@@ -498,7 +499,7 @@ mesh = SubResource("BoxMesh_xghog")
 shape = SubResource("BoxShape3D_i5arm")
 
 [node name="Obstacle20" type="StaticBody3D" parent="." unique_id=894745020]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.649565, 0.50000095, -72.33091)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, -78)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle20" unique_id=44905445]
 mesh = SubResource("BoxMesh_xghog")
@@ -507,7 +508,7 @@ mesh = SubResource("BoxMesh_xghog")
 shape = SubResource("BoxShape3D_i5arm")
 
 [node name="Obstacle21" type="StaticBody3D" parent="." unique_id=789716191]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.762969, 0.50000286, -66.04597)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 0.5, -67)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle21" unique_id=138444328]
 mesh = SubResource("BoxMesh_xghog")
@@ -516,7 +517,7 @@ mesh = SubResource("BoxMesh_xghog")
 shape = SubResource("BoxShape3D_i5arm")
 
 [node name="Obstacle22" type="StaticBody3D" parent="." unique_id=126892393]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.70369, 0.50000286, -73.45001)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.5, -78)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle22" unique_id=292282417]
 mesh = SubResource("BoxMesh_xghog")
@@ -525,7 +526,7 @@ mesh = SubResource("BoxMesh_xghog")
 shape = SubResource("BoxShape3D_i5arm")
 
 [node name="Obstacle23" type="StaticBody3D" parent="." unique_id=1693188375]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.285963, 0.50000286, -65.29261)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.5, 0.5, -67)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle23" unique_id=335535894]
 mesh = SubResource("BoxMesh_xghog")
@@ -534,7 +535,7 @@ mesh = SubResource("BoxMesh_xghog")
 shape = SubResource("BoxShape3D_i5arm")
 
 [node name="Obstacle24" type="StaticBody3D" parent="." unique_id=504925315]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.4188, 0.50000286, -74.40194)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 0.5, -78)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle24" unique_id=1509670379]
 mesh = SubResource("BoxMesh_xghog")
@@ -543,7 +544,7 @@ mesh = SubResource("BoxMesh_xghog")
 shape = SubResource("BoxShape3D_i5arm")
 
 [node name="Obstacle25" type="StaticBody3D" parent="." unique_id=226726434]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.523384, 0.50000286, -65.95888)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42.5, 0.5, -67)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle25" unique_id=316623886]
 mesh = SubResource("BoxMesh_xghog")

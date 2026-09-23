@@ -7,6 +7,15 @@ extends Node3D
 @onready var target_pos: Label = $CanvasLayer/TargetPos
 @onready var path_type_label: Label = $CanvasLayer/PathType
 
+@onready var obstacle_20: StaticBody3D = $Obstacle20
+@onready var obstacle_21: StaticBody3D = $Obstacle21
+@onready var obstacle_22: StaticBody3D = $Obstacle22
+@onready var obstacle_23: StaticBody3D = $Obstacle23
+@onready var obstacle_24: StaticBody3D = $Obstacle24
+@onready var obstacle_25: StaticBody3D = $Obstacle25
+
+var obstacles = []
+
 func _ready() -> void:
 	$CanvasLayer/SubViewportContainer/SubViewport.world_3d = get_viewport().world_3d
 	dds.subscribe("target_z")
@@ -14,12 +23,26 @@ func _ready() -> void:
 	dds.subscribe("tmp_target_z")
 	dds.subscribe("tmp_target_x")
 	dds.subscribe("path_type")
+	
+	obstacles = [obstacle_20, obstacle_21, obstacle_22, obstacle_23, obstacle_24, obstacle_25]
 	pass
 
 var tmp_target_arrow: MeshInstance3D
 var final_target_arrow: MeshInstance3D
 
+var direction = 1
 func _process(delta: float) -> void:
+	var obstacle_speed = 0.01
+	if obstacles[0].position.z <= -78:
+		direction  = 1
+	elif obstacles[0].position.z >= -67:
+		direction = -1
+	for i in range(obstacles.size()):
+		if i % 2 == 0:
+			obstacles[i].position.z += obstacle_speed * direction
+		else:
+			obstacles[i].position.z -= obstacle_speed * direction
+
 	var pos_z: float = robot.position.z
 	var pos_x: float = robot.position.x
 	var ang: float = rad_to_deg(robot.rotation.y)

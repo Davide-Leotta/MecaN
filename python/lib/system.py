@@ -153,3 +153,17 @@ def global_to_local(ang: float, global_coordinates: NDArray[float]) -> NDArray[f
         [-math.sin(rad), math.cos(rad)]
     ])
     return rot_matrix.dot(global_coordinates)
+
+class LowPassFilter:
+    def __init__(self, alpha: float):
+        self.alpha = alpha
+        self.prev = None
+
+    def evaluate(self, u: float) -> float:
+        if self.prev is None:
+            self.prev = u
+            return u
+
+        out = self.alpha * u + (1 - self.alpha) * self.prev
+        self.prev = out
+        return out
