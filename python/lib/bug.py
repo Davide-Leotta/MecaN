@@ -25,9 +25,20 @@ class Bug:
         self.l = l
         self.m = m
         self.target = np.array([0,0])
-    
-    def start(self, target):
+        self.clockwise = 0
+
+    def start(self, target, pos, rep):
         self.target = np.array(target)
+        target_dir = np.array([target[0] - pos[0],target[1] - pos[1]])
+        force_rep = np.array(rep)
+        target_ang = np.atan2(target_dir[0],target_dir[1])
+        repuls_ang = np.atan2(force_rep[0],force_rep[1])
+        ang_err = (target_ang - repuls_ang + math.pi) % (2 * math.pi) - math.pi
+        if ang_err > 0:
+            self.clockwise = 1
+        else:
+            self.clockwise = -1
+        
 
     def get_position(self, pos , queue) -> Tuple[bool,float,float]:
         robot_pos = np.array(pos)
@@ -42,8 +53,8 @@ class Bug:
         chs_target = dir_target
     
         for i in range(TD):
-            if self.direction_flag[(dir_target + i) % TD] == 0:
-                chs_target = (dir_target + i) % TD
+            if self.direction_flag[(dir_target + (i * self.clockwise) + TD) % TD] == 0:
+                chs_target = (dir_target + (i * self.clockwise) + TD) % TD
                 if chs_target != dir_target:
                     bugging = True
                 break
@@ -52,7 +63,7 @@ class Bug:
         point_to_move = robot_pos + v
         
         
-        self.direction_flag[(chs_target + (TD - 1))%TD] = 0
+        self.direction_flag[(chs_target + (-1 * self.clockwise) + TD)%TD] = 0
 
         return bugging, point_to_move[Z], point_to_move[X]
 

@@ -3,7 +3,7 @@ from lib.dds import *
 from lib.time import *
 from lib.dataplot import *
 from lib.system import *
-from python.lib.bug import *
+from lib.bug import *
 from lib.pot_field import *
 from collections import deque
 import numpy as np
@@ -69,8 +69,8 @@ dds.subscribe(["pos_z", "pos_x", "ang", "vel_z","vel_x","vel_ang", "colliding", 
 TTL = 4.0
 valid_points = deque()
 
-pot_field = PotField(1, 4, 3) #k_att, k_rep, rho_0
-bug = Bug(1,2,3)
+pot_field = PotField(0.3, 4, 3) #k_att, k_rep, rho_0
+bug = Bug(1,2.5,3)
 bugging = False
 
 robot = MecanumController(1, 2.5, 0, 15, 0.15, 0.5)
@@ -79,8 +79,7 @@ ori_con = OrientationController(0.1, 0, 0, 3)
 t = Time()
 t.start()
 
-
-target_list = [(-12,0,0),(-12,15,30)]
+target_list = [(-12, 20, 30), (-40, 25, 90), (-70, 0, -120)]
 
 for global_target_pos_z, global_target_pos_x, ang_target in target_list:    
     pos_z = dds.wait("pos_z")
@@ -117,11 +116,11 @@ for global_target_pos_z, global_target_pos_x, ang_target in target_list:
     
         #append new obstacles
         if math.hypot(rel_target_pos_x - pos_x, rel_target_pos_z - pos_z) < 0.15 and t.get() > 1 and (not bugging) and math.hypot(pos_x - global_target_pos_x, pos_z - global_target_pos_z) > 2:
-            bug.start([global_target_pos_z, global_target_pos_x])
+            rep = pot_field.get_repulsive_force()
+            bug.start([global_target_pos_z, global_target_pos_x],[pos_z, pos_x], rep)
             bugging = True
     
         #pop expired points
-    
     
         if math.hypot(global_target_pos_z - pos_z, global_target_pos_z - pos_x) < 0.5:
             rel_target_pos_z = global_target_pos_z
