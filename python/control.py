@@ -198,5 +198,4 @@ for global_target_pos_z, global_target_pos_x, ang_target in target_list:
     dds.publish("w4", 0, dds.DDS_TYPE_FLOAT)
 
 dds.stop()
-#print plots
 plot_multiple(plts,figsize=(10, 10))
