@@ -63,7 +63,7 @@ dds.start()
 #subscribe to robot sensors
 dds.subscribe(["pos_z", "pos_x", "ang", "vel_z", "vel_x", "vel_ang", "colliding", "obstacle_pos_z", "obstacle_pos_x"])
 
-#iit obstacle queue
+#hit obstacle queue
 TTL = 1.0
 valid_points = deque()
 

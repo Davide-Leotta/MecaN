@@ -89,7 +89,7 @@ class VirtualRobot:
     DEC = 2
     TARGET = 3
 
-    def __init__(self,p_target: float,acc: float,v_max: float,dec: float):
+    def __init__(self,p_target: float, acc: float, v_max: float, dec: float):
         self.dir = 1 if p_target >= 0 else -1
         self.p_target = abs(p_target)
         self.acc = abs(acc)
