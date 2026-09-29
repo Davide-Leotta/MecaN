@@ -20,6 +20,10 @@ The Python control system includes the implementation of two reactive approaches
 
 ---
 
+## System Diagram
+![Alt text](diagramma.png?raw=true "Diagram")
+
+
 ## Technologies Used
 
 *   **Simulation:** Godot Engine 4.7.2
